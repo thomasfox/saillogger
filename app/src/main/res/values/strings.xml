@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">SailDataLogger</string>
+    <string name="action_settings">Settings</string>
+    <string name="log_button_logging">Stop logging</string>
+    <string name="log_button_standby">Start logging</string>
+    <string name="err_create_storage_dir">Cannot create storage directory</string>
+    <string name="err_write_track_data">Could not write track data to file: %1$s</string>
+    <string name="err_create_track_data_file">Could not create track data file: %1$s</string>
+    <string name="err_close_track_data_file">Could not close track data file: %1$s</string>
+    <string name="info_gps_connected">Connected to GPS</string>
+    <string name="err_gps_permission_denied">Cannot access GPS, permission denied</string>
+</resources>
