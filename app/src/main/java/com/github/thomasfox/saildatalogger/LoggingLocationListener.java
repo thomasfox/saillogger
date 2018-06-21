@@ -9,20 +9,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 import android.content.Context;
-import android.util.JsonWriter;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.IOException;
-import java.util.Date;
-
-import com.github.thomasfox.saildatalogger.R;
 
 class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -30,35 +20,18 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
 
     private TextView statusText;
 
-    private JsonWriter jsonWriter;
-
     private LocationManager locationManager;
 
     private AppCompatActivity activity;
 
+    private DataLogger dataLogger;
+
     private static final int LOCATION_POLLING_INTERVAL_MILLIS = 500;
 
-    LoggingLocationListener(AppCompatActivity activity, TextView statusText, File storageFile) {
+    LoggingLocationListener(@NonNull AppCompatActivity activity, @NonNull TextView statusText, @NonNull DataLogger dataLogger) {
         this.activity = activity;
         this.statusText = statusText;
-        try {
-            if (!isExternalStorageWritable())
-            {
-                throw new RuntimeException("External Storage not writeable");
-            }
-            if (!storageFile.exists()) {
-                if (!storageFile.createNewFile()) {
-                    throw new RuntimeException("File creation failed");
-                }
-            }
-            jsonWriter = new JsonWriter(new OutputStreamWriter(new FileOutputStream(storageFile), "UTF-8"));
-            jsonWriter.setIndent("  ");
-            jsonWriter.beginArray();
-        } catch (Exception e) {
-            statusText.setText(String.format(
-                    activity.getResources().getString(R.string.err_write_track_data),
-                    e.getMessage()));
-        }
+        this.dataLogger = dataLogger;
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
@@ -75,25 +48,7 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
 
     public void onLocationChanged(Location location) {
         statusText.setText(location.toString());
-
-        if (jsonWriter != null)
-        {
-            LoggingData loggingData = new LoggingData(new Date().getTime())
-                    .latitude(location.getLatitude())
-                    .longitude(location.getLongitude());
-
-            try {
-                jsonWriter.beginObject()
-                        .name("t").value(loggingData.timestamp)
-                        .name("lat").value(loggingData.latitude)
-                        .name("long").value(loggingData.longitude)
-                        .endObject();
-            }
-            catch (IOException e)
-            {
-                statusText.setText(activity.getResources().getString(R.string.err_write_track_data));
-            }
-        }
+        dataLogger.setLocation(location);
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -102,24 +57,8 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
 
     public void onProviderDisabled(String provider) {}
 
-    private boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
-    }
-
     public void close()
     {
-        try {
-            jsonWriter.endArray();
-            jsonWriter.close();
-            jsonWriter = null;
-        }
-        catch (IOException e)
-        {
-            statusText.setText(String.format(
-                    activity.getResources().getString(R.string.err_close_track_data_file),
-                    e.getMessage()));
-        }
         stopLocationListener();
     }
 
