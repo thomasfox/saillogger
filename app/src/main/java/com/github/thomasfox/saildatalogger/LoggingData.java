@@ -56,8 +56,8 @@ public class LoggingData {
 
     public LoggingData acceleration(float[] acceleration) {
         this.accelerationX = acceleration[0];
-        this.accelerationX = acceleration[1];
-        this.accelerationX = acceleration[2];
+        this.accelerationY = acceleration[1];
+        this.accelerationZ = acceleration[2];
         this.accelerationTime = new Date().getTime();
         return this;
     }
