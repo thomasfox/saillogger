@@ -46,23 +46,17 @@ public class DataLogger {
         }
     }
 
-    public void setLocation(Location location)
-    {
-        currentData.locationTime(location.getTime())
-                .latitude(location.getLatitude())
-                .longitude(location.getLongitude())
-                .locationAccuracy(location.getAccuracy());
+    public void setLocation(Location location) {
+        currentData.setLocation(location);
         write();
     }
 
-    public void setMagneticField(float[] values)
-    {
-        currentData.magneticField(values);
-     }
+    public void setMagneticField(float[] values) {
+        currentData.setMagneticField(values);
+    }
 
-    public void setAcceleration(float[] values)
-    {
-        currentData.acceleration(values);
+    public void setAcceleration(float[] values) {
+        currentData.setAcceleration(values);
     }
 
     private void write() {
@@ -70,15 +64,17 @@ public class DataLogger {
         {
             try {
                 jsonWriter.beginObject()
-                        .name("tLoc").value(currentData.locationTime)
-                        .name("accLoc").value(currentData.locationAccuracy)
-                        .name("lat").value(currentData.latitude)
-                        .name("long").value(currentData.longitude)
-                        .name("tMag").value(currentData.magneticFieldTime)
+                        .name("locT").value(currentData.locationTime)
+                        .name("locAcc").value(currentData.locationAccuracy)
+                        .name("locLat").value(currentData.latitude)
+                        .name("locLong").value(currentData.longitude)
+                        .name("locBear").value(currentData.locationBearing)
+                        .name("locVel").value(currentData.locationVelocity)
+                        .name("magT").value(currentData.magneticFieldTime)
                         .name("magX").value(currentData.magneticFieldX)
                         .name("magY").value(currentData.magneticFieldY)
                         .name("magZ").value(currentData.magneticFieldZ)
-                        .name("tAcc").value(currentData.accelerationTime)
+                        .name("accT").value(currentData.accelerationTime)
                         .name("accX").value(currentData.accelerationX)
                         .name("accY").value(currentData.accelerationY)
                         .name("accZ").value(currentData.accelerationZ)

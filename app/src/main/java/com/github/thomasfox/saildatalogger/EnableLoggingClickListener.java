@@ -13,7 +13,7 @@ import java.io.File;
 public class EnableLoggingClickListener implements View.OnClickListener {
 
     private static String TRACK_FILE_NAME_PREFIX = "track";
-    private static String TRACK_FILE_NAME_SUFFIX = ".track";
+    private static String TRACK_FILE_NAME_SUFFIX = ".sailllog";
 
     private TextView statusText;
 

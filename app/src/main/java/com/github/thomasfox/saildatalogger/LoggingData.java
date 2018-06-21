@@ -1,5 +1,7 @@
 package com.github.thomasfox.saildatalogger;
 
+import android.location.Location;
+
 import java.util.Date;
 
 public class LoggingData {
@@ -9,56 +11,49 @@ public class LoggingData {
 
     public Double longitude;
 
-    public Double locationAccuracy;
+    public Float locationAccuracy;
+
+    public Float locationBearing;
+
+    public Float locationVelocity;
 
     public Long magneticFieldTime;
 
-    public float magneticFieldX;
+    public Float magneticFieldX;
 
-    public float magneticFieldY;
+    public Float magneticFieldY;
 
-    public float magneticFieldZ;
+    public Float magneticFieldZ;
 
     public Long accelerationTime;
 
-    public float accelerationX;
+    public Float accelerationX;
 
-    public float accelerationY;
+    public Float accelerationY;
 
-    public float accelerationZ;
+    public Float accelerationZ;
 
-    public LoggingData locationTime(long positionTime) {
-        this.locationTime = positionTime;
-        return this;
+    public void setLocation(Location location)
+    {
+        locationTime = location.getTime();
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        locationAccuracy = location.getAccuracy();
+        locationBearing = location.getBearing();
+        locationVelocity = location.getSpeed();
     }
 
-    public LoggingData latitude(double latitude) {
-        this.latitude = latitude;
-        return this;
-    }
-
-    public LoggingData longitude(double longitude) {
-        this.longitude = longitude;
-        return this;
-    }
-    public LoggingData locationAccuracy(double locationAccuracy) {
-        this.locationAccuracy = locationAccuracy;
-        return this;
-    }
-
-    public LoggingData magneticField(float[] magneticField) {
+    public void setMagneticField(float[] magneticField) {
         this.magneticFieldX = magneticField[0];
         this.magneticFieldY = magneticField[1];
         this.magneticFieldZ = magneticField[2];
         this.magneticFieldTime = new Date().getTime();
-        return this;
     }
 
-    public LoggingData acceleration(float[] acceleration) {
+    public void setAcceleration(float[] acceleration) {
         this.accelerationX = acceleration[0];
         this.accelerationY = acceleration[1];
         this.accelerationZ = acceleration[2];
         this.accelerationTime = new Date().getTime();
-        return this;
     }
 }
