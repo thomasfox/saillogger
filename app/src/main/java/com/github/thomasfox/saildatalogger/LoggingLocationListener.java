@@ -28,7 +28,10 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
 
     private static final int LOCATION_POLLING_INTERVAL_MILLIS = 500;
 
-    LoggingLocationListener(@NonNull AppCompatActivity activity, @NonNull TextView statusText, @NonNull DataLogger dataLogger) {
+    LoggingLocationListener(
+            @NonNull AppCompatActivity activity,
+            @NonNull TextView statusText,
+            @NonNull DataLogger dataLogger) {
         this.activity = activity;
         this.statusText = statusText;
         this.dataLogger = dataLogger;
@@ -68,7 +71,7 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
                 == PackageManager.PERMISSION_GRANTED)
         {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_POLLING_INTERVAL_MILLIS, 0, this);
-            statusText.setText(activity.getResources().getString(R.string.info_gps_connected));
+            statusText.setText(activity.getResources().getString(R.string.info_gps_acticated));
         }
         else
         {
@@ -95,5 +98,6 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
     private void stopLocationListener()
     {
         locationManager.removeUpdates(this);
+        statusText.setText(activity.getResources().getString(R.string.info_gps_stopped));
     }
 }

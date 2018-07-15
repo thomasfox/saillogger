@@ -7,9 +7,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
 
-class LoggingCompassListener implements SensorEventListener {
+class LoggingSensorListener implements SensorEventListener {
 
     private SensorManager sensorManager;
 
@@ -17,7 +16,7 @@ class LoggingCompassListener implements SensorEventListener {
 
     private static final int POLLING_INTERVAL_MILLIS = 500;
 
-    LoggingCompassListener(@NonNull AppCompatActivity activity, @NonNull DataLogger dataLogger) {
+    LoggingSensorListener(@NonNull AppCompatActivity activity, @NonNull DataLogger dataLogger) {
         this.dataLogger = dataLogger;
         sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         registerSensorListener();
@@ -37,8 +36,7 @@ class LoggingCompassListener implements SensorEventListener {
         }
     }
 
-    public void close()
-    {
+    public void close() {
         stopSensorListener();
     }
 

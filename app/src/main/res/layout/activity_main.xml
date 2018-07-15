@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="saildatalogger.thomasfox.github.com.saildatalogger.com.github.thomasfox.saildatalogger.MainActivity">
+    tools:context="com.github.thomasfox.saildatalogger.MainActivity">
 
     <TextView
         android:id="@+id/statusText"
@@ -26,7 +26,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Enable Logging"
+        android:text="@string/enable_logging"
         android:textOff="@string/log_button_standby"
         android:textOn="@string/log_button_logging"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -1,9 +1,7 @@
 package com.github.thomasfox.saildatalogger;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
-import android.os.Environment;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -19,7 +17,7 @@ public class EnableLoggingClickListener implements View.OnClickListener {
 
     private LoggingLocationListener locationListener;
 
-    private LoggingCompassListener compassListener;
+    private LoggingSensorListener compassListener;
 
     private DataLogger dataLogger;
 
@@ -36,7 +34,7 @@ public class EnableLoggingClickListener implements View.OnClickListener {
         if (loggingEnabled) {
             dataLogger = new DataLogger(activity, statusText, getTrackFile());
             locationListener = new LoggingLocationListener(activity, statusText, dataLogger);
-            compassListener = new LoggingCompassListener(activity, dataLogger);
+            compassListener = new LoggingSensorListener(activity, dataLogger);
         } else if (dataLogger != null) {
             locationListener.close();
             locationListener = null;

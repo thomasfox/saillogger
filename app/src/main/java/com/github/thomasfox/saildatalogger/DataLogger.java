@@ -1,6 +1,5 @@
 package com.github.thomasfox.saildatalogger;
 
-import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
