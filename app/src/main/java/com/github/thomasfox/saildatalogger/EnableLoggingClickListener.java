@@ -82,5 +82,4 @@ public class EnableLoggingClickListener implements View.OnClickListener {
         }
         return nextNumber;
     }
-
 }
