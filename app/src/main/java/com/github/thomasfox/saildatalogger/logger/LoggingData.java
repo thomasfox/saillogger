@@ -1,4 +1,4 @@
-package com.github.thomasfox.saildatalogger;
+package com.github.thomasfox.saildatalogger.logger;
 
 import android.location.Location;
 

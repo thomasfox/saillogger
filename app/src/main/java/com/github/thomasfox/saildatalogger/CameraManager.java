@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import com.github.thomasfox.saildatalogger.logger.Files;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -118,35 +120,15 @@ public class CameraManager implements Camera.PictureCallback {
 
     private static File getOutputJpegFile() {
 
-        File mediaStorageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                return null;
-            }
-        }
-
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-        return new File(mediaStorageDir.getPath() + File.separator +
+        return new File(Files.getStorageDir() + File.separator +
                     "IMG_"+ timeStamp + ".jpg");
     }
 
     private static File getOutputVideoFile() {
 
-        File mediaStorageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_MOVIES);
-
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                return null;
-            }
-        }
-
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-        return new File(mediaStorageDir.getPath() + File.separator +
+        return new File(Files.getStorageDir() + File.separator +
                 "VID_"+ timeStamp + ".mp4");
     }
 

@@ -1,4 +1,4 @@
-package com.github.thomasfox.saildatalogger;
+package com.github.thomasfox.saildatalogger.logger;
 
 import android.location.Location;
 import android.os.Environment;
@@ -6,10 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.JsonWriter;
 import android.widget.TextView;
 
+import com.github.thomasfox.saildatalogger.R;
+import com.github.thomasfox.saildatalogger.logger.LoggingData;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Date;
 
 public class DataLogger {
     /** The current sensor readings. */
@@ -21,7 +25,7 @@ public class DataLogger {
 
     private JsonWriter jsonWriter;
 
-    DataLogger(AppCompatActivity activity, TextView statusText, File storageFile)
+    public DataLogger(AppCompatActivity activity, TextView statusText, File storageFile)
     {
         this.activity = activity;
         this.statusText = statusText;
@@ -37,6 +41,15 @@ public class DataLogger {
             }
             jsonWriter = new JsonWriter(new OutputStreamWriter(new FileOutputStream(storageFile), "UTF-8"));
             jsonWriter.setIndent("  ");
+            jsonWriter.beginObject()
+                    .name("start")
+                    .beginObject()
+                    .name("format")
+                    .value("v1.1")
+                    .name("startT")
+                    .value(new Date().getTime())
+                    .endObject()
+                    .name("track");
             jsonWriter.beginArray();
         } catch (Exception e) {
             statusText.setText(String.format(
@@ -91,6 +104,12 @@ public class DataLogger {
         if (jsonWriter != null) {
             try {
                 jsonWriter.endArray();
+                jsonWriter.name("end")
+                        .beginObject()
+                        .name("endT")
+                        .value(new Date().getTime())
+                        .endObject()
+                        .endObject();
                 jsonWriter.close();
                 jsonWriter = null;
             }

@@ -14,6 +14,8 @@ import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 import android.content.Context;
 
+import com.github.thomasfox.saildatalogger.logger.DataLogger;
+
 class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 2135;

@@ -8,6 +8,8 @@ import android.hardware.SensorManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import com.github.thomasfox.saildatalogger.logger.DataLogger;
+
 class LoggingSensorListener implements SensorEventListener {
 
     private SensorManager sensorManager;
