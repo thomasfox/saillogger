@@ -1,4 +1,4 @@
-package com.github.thomasfox.saildatalogger;
+package com.github.thomasfox.saildatalogger.camera;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
-    private static final String TAG = "CameraPreview";
+    private static final String TAG = "saildatalogger";
 
     private Camera camera;
     private CameraManager cameraManager;
@@ -31,7 +31,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             camera.startPreview();
             post(new Runnable() { public void run() { cameraManager.startVideo(); } });
         } catch (IOException e) {
-            Log.d(TAG, "Error setting camera preview: " + e.getMessage());
+            Log.w(TAG, "Error setting camera preview: " + e.getMessage());
         }
     }
 
@@ -39,22 +39,5 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-        if (holder.getSurface() == null) {
-            return;
-        }
-
-        try {
-            camera.stopPreview();
-        } catch (Exception e){
-            Log.d(TAG, "Error stopping camera preview: " + e.getMessage());
-        }
-
-        try {
-            camera.setPreviewDisplay(holder);
-            camera.startPreview();
-
-        } catch (Exception e){
-            Log.d(TAG, "Error starting camera preview: " + e.getMessage());
-        }
     }
 }

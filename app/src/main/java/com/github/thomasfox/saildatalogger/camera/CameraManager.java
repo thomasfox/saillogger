@@ -1,4 +1,4 @@
-package com.github.thomasfox.saildatalogger;
+package com.github.thomasfox.saildatalogger.camera;
 
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
@@ -10,13 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import com.github.thomasfox.saildatalogger.R;
 import com.github.thomasfox.saildatalogger.logger.Files;
 
 import java.io.IOException;
 
 public class CameraManager {
 
-    private static final String TAG = "CameraManager";
+    private static final String TAG = "saildatalogger";
 
     private AppCompatActivity activity;
 
@@ -30,7 +31,7 @@ public class CameraManager {
 
     private int trackFileNumber;
 
-    CameraManager(@NonNull AppCompatActivity activity, int trackFileNumber) {
+    public CameraManager(@NonNull AppCompatActivity activity, int trackFileNumber) {
         this.activity = activity;
         this.trackFileNumber = trackFileNumber;
         if (hasCameraHardware()) {
@@ -68,6 +69,7 @@ public class CameraManager {
         try {
             int cameraInstance = getFrontCameraInstanceId();
             this.camera = Camera.open(cameraInstance);
+            this.camera.setDisplayOrientation(90);
             final Camera.Parameters parameters = this.camera.getParameters();
             parameters.setPictureFormat(ImageFormat.JPEG);
             parameters.setJpegQuality(80);

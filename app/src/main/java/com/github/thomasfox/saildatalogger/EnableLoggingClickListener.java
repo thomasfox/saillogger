@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.github.thomasfox.saildatalogger.camera.CameraManager;
 import com.github.thomasfox.saildatalogger.logger.DataLogger;
 import com.github.thomasfox.saildatalogger.logger.Files;
 
