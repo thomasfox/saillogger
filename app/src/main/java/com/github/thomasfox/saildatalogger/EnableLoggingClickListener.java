@@ -19,6 +19,8 @@ public class EnableLoggingClickListener implements View.OnClickListener {
 
     private DataLogger dataLogger;
 
+    private CameraManager cameraManager;
+
     private AppCompatActivity activity;
 
     EnableLoggingClickListener(TextView statusText, AppCompatActivity activity) {
@@ -33,6 +35,7 @@ public class EnableLoggingClickListener implements View.OnClickListener {
             dataLogger = new DataLogger(activity, statusText, Files.getTrackFile());
             locationListener = new LoggingLocationListener(activity, statusText, dataLogger);
             compassListener = new LoggingSensorListener(activity, dataLogger);
+            cameraManager = new CameraManager(activity);
         } else if (dataLogger != null) {
             locationListener.close();
             locationListener = null;
@@ -40,6 +43,8 @@ public class EnableLoggingClickListener implements View.OnClickListener {
             compassListener = null;
             dataLogger.close();
             dataLogger = null;
+            cameraManager.close();
+            cameraManager = null;
        }
     }
 }

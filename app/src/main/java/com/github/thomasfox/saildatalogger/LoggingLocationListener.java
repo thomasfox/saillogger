@@ -28,8 +28,6 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
 
     private DataLogger dataLogger;
 
-    private CameraManager cameraManager;
-
     private static final int LOCATION_POLLING_INTERVAL_MILLIS = 500;
 
     LoggingLocationListener(
@@ -39,7 +37,6 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
         this.activity = activity;
         this.statusText = statusText;
         this.dataLogger = dataLogger;
-        this.cameraManager = new CameraManager(activity);
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
@@ -104,7 +101,5 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
     {
         locationManager.removeUpdates(this);
         statusText.setText(activity.getResources().getString(R.string.info_gps_stopped));
-        cameraManager.close();
-        cameraManager = null;
     }
 }
