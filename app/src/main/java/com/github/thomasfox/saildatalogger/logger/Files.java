@@ -7,16 +7,18 @@ import java.io.File;
 
 public class Files {
 
+    private static final String TAG = "saildatalogger";
+
     private static String TRACK_FILE_NAME_PREFIX = "track";
     private static String TRACK_FILE_NAME_SUFFIX = ".sailllog";
     private static String VIDEO_FILE_NAME_SUFFIX = ".mp4";
 
-    private static final String TAG = "Files";
-
     private static File getStorageDir() {
         File file = new File(Environment.getExternalStorageDirectory(), "/saillogger");
-        if (!file.mkdirs()) {
-            Log.d(TAG, "Error creating file "  + file.getAbsolutePath());
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                Log.w(TAG, "Error creating directory " + file.getAbsolutePath());
+            }
         }
         return file;
     }
