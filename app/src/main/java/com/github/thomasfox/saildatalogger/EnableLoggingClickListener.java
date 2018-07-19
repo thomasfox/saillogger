@@ -1,6 +1,5 @@
 package com.github.thomasfox.saildatalogger;
 
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 
 import android.view.View;
@@ -9,8 +8,6 @@ import android.widget.ToggleButton;
 
 import com.github.thomasfox.saildatalogger.logger.DataLogger;
 import com.github.thomasfox.saildatalogger.logger.Files;
-
-import java.io.File;
 
 public class EnableLoggingClickListener implements View.OnClickListener {
 

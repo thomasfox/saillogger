@@ -3,8 +3,6 @@ package com.github.thomasfox.saildatalogger.logger;
 import android.os.Environment;
 import android.util.Log;
 
-import com.github.thomasfox.saildatalogger.R;
-
 import java.io.File;
 
 public class Files {

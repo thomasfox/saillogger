@@ -5,7 +5,6 @@ import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -34,12 +33,12 @@ public class CameraManager implements Camera.PictureCallback {
 
     private boolean recording = false;
 
-    public CameraManager(@NonNull AppCompatActivity activity) {
+    CameraManager(@NonNull AppCompatActivity activity) {
         this.activity = activity;
         if (hasCameraHardware()) {
             retrieveCameraInstance();
             preview = new CameraPreview(activity, camera, this);
-            FrameLayout previewLayout = (FrameLayout) activity.findViewById(R.id.camera_preview);
+            FrameLayout previewLayout = activity.findViewById(R.id.camera_preview);
             previewLayout.addView(preview);
         }
     }
@@ -83,6 +82,10 @@ public class CameraManager implements Camera.PictureCallback {
                     minSize =  size;
                 }
             }
+            if (minSize == null) {
+                Log.w(TAG, "cannot get possible sizes for camera " + cameraInstance);
+                return;
+            }
             parameters.setPictureSize(minSize.width, minSize.height);
             parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
             this.camera.setParameters(parameters);
@@ -102,10 +105,6 @@ public class CameraManager implements Camera.PictureCallback {
     public void onPictureTaken(byte[] data, Camera camera) {
 
         File pictureFile = getOutputJpegFile();
-        if (pictureFile == null){
-            Log.d(TAG, "Error creating media file, check storage permissions");
-            return;
-        }
 
         try {
             FileOutputStream fos = new FileOutputStream(pictureFile);

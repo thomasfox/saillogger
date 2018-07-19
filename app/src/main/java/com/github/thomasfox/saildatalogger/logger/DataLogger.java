@@ -7,7 +7,6 @@ import android.util.JsonWriter;
 import android.widget.TextView;
 
 import com.github.thomasfox.saildatalogger.R;
-import com.github.thomasfox.saildatalogger.logger.LoggingData;
 
 import java.io.File;
 import java.io.FileOutputStream;
