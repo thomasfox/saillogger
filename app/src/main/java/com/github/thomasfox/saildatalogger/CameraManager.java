@@ -12,14 +12,9 @@ import android.widget.FrameLayout;
 
 import com.github.thomasfox.saildatalogger.logger.Files;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class CameraManager implements Camera.PictureCallback {
+public class CameraManager {
 
     private static final String TAG = "CameraManager";
 
@@ -33,8 +28,11 @@ public class CameraManager implements Camera.PictureCallback {
 
     private boolean recording = false;
 
-    CameraManager(@NonNull AppCompatActivity activity) {
+    private int trackFileNumber;
+
+    CameraManager(@NonNull AppCompatActivity activity, int trackFileNumber) {
         this.activity = activity;
+        this.trackFileNumber = trackFileNumber;
         if (hasCameraHardware()) {
             retrieveCameraInstance();
             preview = new CameraPreview(activity, camera, this);
@@ -95,42 +93,6 @@ public class CameraManager implements Camera.PictureCallback {
         }
     }
 
-    public void takePicture() {
-        if (camera != null) {
-            camera.takePicture(null, null, this);
-        }
-    }
-
-    @Override
-    public void onPictureTaken(byte[] data, Camera camera) {
-
-        File pictureFile = getOutputJpegFile();
-
-        try {
-            FileOutputStream fos = new FileOutputStream(pictureFile);
-            fos.write(data);
-            fos.close();
-        } catch (FileNotFoundException e) {
-            Log.d(TAG, "File not found: " + e.getMessage());
-        } catch (IOException e) {
-            Log.d(TAG, "Error accessing file: " + e.getMessage());
-        }
-    }
-
-    private static File getOutputJpegFile() {
-
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        return new File(Files.getStorageDir() + File.separator +
-                    "IMG_"+ timeStamp + ".jpg");
-    }
-
-    private static File getOutputVideoFile() {
-
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        return new File(Files.getStorageDir() + File.separator +
-                "VID_"+ timeStamp + ".mp4");
-    }
-
     public void close() {
         releaseMediaRecorder();
     }
@@ -144,7 +106,7 @@ public class CameraManager implements Camera.PictureCallback {
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
         mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_LOW));
-        mMediaRecorder.setOutputFile(getOutputVideoFile().toString());
+        mMediaRecorder.setOutputFile(Files.getVideoFile(trackFileNumber).toString());
         mMediaRecorder.setPreviewDisplay(preview.getHolder().getSurface());
 
         try {

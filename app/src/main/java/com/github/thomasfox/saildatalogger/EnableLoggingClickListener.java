@@ -32,10 +32,11 @@ public class EnableLoggingClickListener implements View.OnClickListener {
     public void onClick(View view) {
         boolean loggingEnabled = ((ToggleButton) view).isChecked();
         if (loggingEnabled) {
-            dataLogger = new DataLogger(activity, statusText, Files.getTrackFile());
+            int trackFileNumber = Files.getTrackFileNumber();
+            dataLogger = new DataLogger(activity, statusText, trackFileNumber);
             locationListener = new LoggingLocationListener(activity, statusText, dataLogger);
             compassListener = new LoggingSensorListener(activity, dataLogger);
-            cameraManager = new CameraManager(activity);
+            cameraManager = new CameraManager(activity, trackFileNumber);
         } else if (dataLogger != null) {
             locationListener.close();
             locationListener = null;

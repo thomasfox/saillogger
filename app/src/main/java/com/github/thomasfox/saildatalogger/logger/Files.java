@@ -9,10 +9,11 @@ public class Files {
 
     private static String TRACK_FILE_NAME_PREFIX = "track";
     private static String TRACK_FILE_NAME_SUFFIX = ".sailllog";
+    private static String VIDEO_FILE_NAME_SUFFIX = ".mp4";
 
     private static final String TAG = "Files";
 
-    public static File getStorageDir() {
+    private static File getStorageDir() {
         File file = new File(Environment.getExternalStorageDirectory(), "/saillogger");
         if (!file.mkdirs()) {
             Log.d(TAG, "Error creating file "  + file.getAbsolutePath());
@@ -20,19 +21,29 @@ public class Files {
         return file;
     }
 
-    public static File getTrackFile() {
-        return new File(getStorageDir(), TRACK_FILE_NAME_PREFIX + getTrackFileNumber() + TRACK_FILE_NAME_SUFFIX);
+    public static File getTrackFile(int trackFileNumber) {
+        return new File(
+                getStorageDir(),
+                TRACK_FILE_NAME_PREFIX + trackFileNumber + TRACK_FILE_NAME_SUFFIX);
     }
 
-    private static Integer getTrackFileNumber() {
+    public static File getVideoFile(int trackFileNumber) {
+        return new File(
+                getStorageDir(),
+                TRACK_FILE_NAME_PREFIX + trackFileNumber + VIDEO_FILE_NAME_SUFFIX);
+    }
+
+    public static Integer getTrackFileNumber() {
         File dir = getStorageDir();
         File[] files = dir.listFiles();
         int nextNumber = 1;
         if (files != null) {
             for (File file : files) {
-                if (file.getName().startsWith(TRACK_FILE_NAME_PREFIX) && file.getName().endsWith(TRACK_FILE_NAME_SUFFIX)) {
+                if (file.getName().startsWith(TRACK_FILE_NAME_PREFIX)
+                        && file.getName().endsWith(TRACK_FILE_NAME_SUFFIX)) {
                     String trackNumberString = file.getName().substring(
-                            TRACK_FILE_NAME_PREFIX.length(), file.getName().length() - TRACK_FILE_NAME_SUFFIX.length());
+                            TRACK_FILE_NAME_PREFIX.length(),
+                            file.getName().length() - TRACK_FILE_NAME_SUFFIX.length());
 
                     Integer trackNumber;
                     try {

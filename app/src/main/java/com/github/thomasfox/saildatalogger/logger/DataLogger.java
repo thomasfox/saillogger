@@ -24,10 +24,11 @@ public class DataLogger {
 
     private JsonWriter jsonWriter;
 
-    public DataLogger(AppCompatActivity activity, TextView statusText, File storageFile)
+    public DataLogger(AppCompatActivity activity, TextView statusText, int trackFileNumber)
     {
         this.activity = activity;
         this.statusText = statusText;
+        File storageFile = Files.getTrackFile(trackFileNumber);
         try {
             if (!isExternalStorageWritable())
             {
