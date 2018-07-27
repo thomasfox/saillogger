@@ -10,7 +10,7 @@ public class Files {
     private static final String TAG = "saildatalogger";
 
     private static String TRACK_FILE_NAME_PREFIX = "track";
-    private static String TRACK_FILE_NAME_SUFFIX = ".sailllog";
+    private static String TRACK_FILE_NAME_SUFFIX = ".saillog";
     private static String VIDEO_FILE_NAME_SUFFIX = ".mp4";
 
     private static File getStorageDir() {
