@@ -16,7 +16,7 @@ class LoggingSensorListener implements SensorEventListener {
 
     private DataLogger dataLogger;
 
-    private static final int POLLING_INTERVAL_MILLIS = 500;
+    private static final int POLLING_INTERVAL_MICROS = 500000;
 
     LoggingSensorListener(@NonNull AppCompatActivity activity, @NonNull DataLogger dataLogger) {
         this.dataLogger = dataLogger;
@@ -45,9 +45,9 @@ class LoggingSensorListener implements SensorEventListener {
     private void registerSensorListener()
     {
         Sensor compass = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        sensorManager.registerListener(this, compass, POLLING_INTERVAL_MILLIS);
+        sensorManager.registerListener(this, compass, POLLING_INTERVAL_MICROS);
         Sensor acceleration = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this, acceleration, POLLING_INTERVAL_MILLIS);
+        sensorManager.registerListener(this, acceleration, POLLING_INTERVAL_MICROS);
     }
 
     private void stopSensorListener()

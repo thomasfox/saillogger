@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DataLogger {
@@ -21,6 +22,8 @@ public class DataLogger {
     private AppCompatActivity activity;
 
     private TextView statusText;
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy' 'HH:mm:ss.SSSZ");
 
     private JsonWriter jsonWriter;
 
@@ -41,13 +44,16 @@ public class DataLogger {
             }
             jsonWriter = new JsonWriter(new OutputStreamWriter(new FileOutputStream(storageFile), "UTF-8"));
             jsonWriter.setIndent("  ");
+            Date startDate = new Date();
             jsonWriter.beginObject()
                     .name("start")
                     .beginObject()
                     .name("format")
-                    .value("v1.1")
+                    .value("v1.2")
                     .name("startT")
-                    .value(new Date().getTime())
+                    .value(startDate.getTime())
+                    .name("startTFormatted")
+                    .value(dateFormat.format(startDate))
                     .endObject()
                     .name("track");
             jsonWriter.beginArray();
@@ -58,39 +64,50 @@ public class DataLogger {
         }
     }
 
-    public void setLocation(Location location) {
+    public synchronized void setLocation(Location location) {
         currentData.setLocation(location);
         write();
+        currentData.reset();
     }
 
-    public void setMagneticField(float[] values) {
+    public synchronized void setMagneticField(float[] values) {
         currentData.setMagneticField(values);
+        write();
+        currentData.reset();
     }
 
-    public void setAcceleration(float[] values) {
+    public synchronized void setAcceleration(float[] values) {
         currentData.setAcceleration(values);
+        write();
+        currentData.reset();
     }
 
     private void write() {
         if (jsonWriter != null)
         {
             try {
-                jsonWriter.beginObject()
-                        .name("locT").value(currentData.locationTime)
-                        .name("locAcc").value(currentData.locationAccuracy)
-                        .name("locLat").value(currentData.latitude)
-                        .name("locLong").value(currentData.longitude)
-                        .name("locBear").value(currentData.locationBearing)
-                        .name("locVel").value(currentData.locationVelocity)
-                        .name("magT").value(currentData.magneticFieldTime)
-                        .name("magX").value(currentData.magneticFieldX)
-                        .name("magY").value(currentData.magneticFieldY)
-                        .name("magZ").value(currentData.magneticFieldZ)
-                        .name("accT").value(currentData.accelerationTime)
-                        .name("accX").value(currentData.accelerationX)
-                        .name("accY").value(currentData.accelerationY)
-                        .name("accZ").value(currentData.accelerationZ)
-                        .endObject();
+                jsonWriter.beginObject();
+                if (currentData.hasLocation()) {
+                    jsonWriter.name("locT").value(currentData.locationTime)
+                            .name("locAcc").value(currentData.locationAccuracy)
+                            .name("locLat").value(currentData.latitude)
+                            .name("locLong").value(currentData.longitude)
+                            .name("locBear").value(currentData.locationBearing)
+                            .name("locVel").value(currentData.locationVelocity);
+                }
+                if (currentData.hasMagneticField()) {
+                    jsonWriter.name("magT").value(currentData.magneticFieldTime)
+                            .name("magX").value(currentData.magneticFieldX)
+                            .name("magY").value(currentData.magneticFieldY)
+                            .name("magZ").value(currentData.magneticFieldZ);
+                }
+                if (currentData.hasAcceleration()) {
+                    jsonWriter.name("accT").value(currentData.accelerationTime)
+                            .name("accX").value(currentData.accelerationX)
+                            .name("accY").value(currentData.accelerationY)
+                            .name("accZ").value(currentData.accelerationZ);
+                }
+                jsonWriter.endObject();
             }
             catch (IOException e)
             {
@@ -104,10 +121,13 @@ public class DataLogger {
         if (jsonWriter != null) {
             try {
                 jsonWriter.endArray();
+                Date endDate = new Date();
                 jsonWriter.name("end")
                         .beginObject()
                         .name("endT")
-                        .value(new Date().getTime())
+                        .value(endDate.getTime())
+                        .name("endTFormatted")
+                        .value(dateFormat.format(endDate))
                         .endObject()
                         .endObject();
                 jsonWriter.close();

@@ -56,4 +56,44 @@ public class LoggingData {
         this.accelerationZ = acceleration[2];
         this.accelerationTime = new Date().getTime();
     }
+
+    public void reset() {
+        locationTime = null;
+        latitude = null;
+        longitude = null;
+        locationAccuracy = null;
+        locationBearing = null;
+        locationVelocity = null;
+        magneticFieldTime = null;
+        magneticFieldX = null;
+        magneticFieldY = null;
+        magneticFieldZ = null;
+        accelerationTime = null;
+        accelerationX = null;
+        accelerationY = null;
+        accelerationZ = null;
+    }
+
+    public boolean hasLocation() {
+        return (locationTime != null
+                || latitude != null
+                || longitude != null
+                || locationAccuracy != null
+                || locationBearing != null
+                || locationVelocity != null);
+    }
+
+    public boolean hasMagneticField() {
+        return (magneticFieldTime != null
+                || magneticFieldX != null
+                || magneticFieldY != null
+                || magneticFieldZ != null);
+    }
+
+    public boolean hasAcceleration() {
+        return (accelerationTime != null
+            || accelerationX != null
+            || accelerationY != null
+            || accelerationZ != null);
+    }
 }
