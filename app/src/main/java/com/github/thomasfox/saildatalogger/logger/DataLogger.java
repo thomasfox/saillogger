@@ -43,7 +43,7 @@ public class DataLogger {
                 }
             }
             jsonWriter = new JsonWriter(new OutputStreamWriter(new FileOutputStream(storageFile), "UTF-8"));
-            jsonWriter.setIndent("  ");
+            jsonWriter.setIndent("");
             Date startDate = new Date();
             jsonWriter.beginObject()
                     .name("start")
