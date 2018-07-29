@@ -24,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
         enableLoggingButton.setOnClickListener(new EnableLoggingClickListener(statusText,this));
 
         setSupportActionBar((Toolbar) findViewById(R.id.mainToolbar));
+        getSupportActionBar().setTitle(
+                getResources().getString(R.string.app_name) + " "
+                        + getResources().getString(R.string.app_version));
     }
 
     @Override

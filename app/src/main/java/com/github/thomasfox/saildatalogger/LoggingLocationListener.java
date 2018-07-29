@@ -28,7 +28,9 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
 
     private DataLogger dataLogger;
 
-    private static final int LOCATION_POLLING_INTERVAL_MILLIS = 500;
+    private static final int LOCATION_POLLING_INTERVAL_MILLIS = 2000;
+
+    private static final int LOCATION_MIN_DISTANCE_METERS = 2;
 
     LoggingLocationListener(
             @NonNull AppCompatActivity activity,
@@ -72,7 +74,11 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED)
         {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_POLLING_INTERVAL_MILLIS, 0, this);
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    LOCATION_POLLING_INTERVAL_MILLIS,
+                    LOCATION_MIN_DISTANCE_METERS,
+                   this);
             statusText.setText(activity.getResources().getString(R.string.info_gps_acticated));
         }
         else
