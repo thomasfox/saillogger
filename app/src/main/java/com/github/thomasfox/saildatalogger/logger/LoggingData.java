@@ -5,6 +5,7 @@ import android.location.Location;
 import java.util.Date;
 
 public class LoggingData {
+    // time from GPS signal
     public Long locationTime;
 
     public Double latitude;
@@ -17,6 +18,10 @@ public class LoggingData {
 
     public Float locationVelocity;
 
+    // device time when GPS data was recorded
+    public Long locationDeviceTime;
+
+    // device time when magnetic field was recorded
     public Long magneticFieldTime;
 
     public Float magneticFieldX;
@@ -25,6 +30,7 @@ public class LoggingData {
 
     public Float magneticFieldZ;
 
+    // device time when acceleration was recorded
     public Long accelerationTime;
 
     public Float accelerationX;
@@ -41,6 +47,7 @@ public class LoggingData {
         locationAccuracy = location.getAccuracy();
         locationBearing = location.getBearing();
         locationVelocity = location.getSpeed();
+        locationDeviceTime = new Date().getTime();
     }
 
     public void setMagneticField(float[] magneticField) {
