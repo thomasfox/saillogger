@@ -16,7 +16,12 @@ import android.content.Context;
 
 import com.github.thomasfox.saildatalogger.logger.DataLogger;
 
+import java.util.Locale;
+
 class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
+
+    /** radius of the earth in meters. */
+    private static final double EARTH_RADIUS = 6371000;
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 2135;
 
@@ -27,6 +32,8 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
     private AppCompatActivity activity;
 
     private DataLogger dataLogger;
+
+    private Location startLocation;
 
     private static final int LOCATION_POLLING_INTERVAL_MILLIS = 2000;
 
@@ -54,7 +61,10 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
     }
 
     public void onLocationChanged(Location location) {
-        statusText.setText(location.toString());
+        if (startLocation == null) {
+            startLocation = location;
+        }
+        statusText.setText(getLocationText(location));
         dataLogger.setLocation(location);
     }
 
@@ -107,5 +117,31 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
     {
         locationManager.removeUpdates(this);
         statusText.setText(activity.getResources().getString(R.string.info_gps_stopped));
+        startLocation = null;
+    }
+
+    private String getLocationText(Location location) {
+        String result = String.format(Locale.GERMAN, "(%.0f,%.0f)m",
+                getX(location) - getX(startLocation),
+                getY(location)  - getY(startLocation));
+        if (location.hasAccuracy()) {
+            result += " +/- " + location.getAccuracy() + "m";
+        }
+        if (location.hasBearing()) {
+            result += ", bearing " + location.getBearing();
+        }
+        return result;
+    }
+
+    public double getY(Location location)
+    {
+        return location.getLatitude() / 180 * Math.PI * EARTH_RADIUS;
+    }
+
+    public double getX(Location location)
+    {
+        return location.getLongitude() / 180 * Math.PI
+                * Math.cos(location.getLatitude() / 180 * Math.PI)
+                * EARTH_RADIUS;
     }
 }
