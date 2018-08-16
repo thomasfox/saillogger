@@ -1,8 +1,11 @@
 package com.github.thomasfox.saildatalogger;
 
+import android.content.Context;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -24,6 +27,8 @@ public class EnableLoggingClickListener implements View.OnClickListener {
 
     private AppCompatActivity activity;
 
+    private float oldBrightness;
+
     EnableLoggingClickListener(TextView statusText, AppCompatActivity activity) {
         this.statusText = statusText;
         this.activity = activity;
@@ -38,6 +43,7 @@ public class EnableLoggingClickListener implements View.OnClickListener {
             locationListener = new LoggingLocationListener(activity, statusText, dataLogger);
             compassListener = new LoggingSensorListener(activity, dataLogger);
             cameraManager = new CameraManager(activity, trackFileNumber);
+            keepScreenOnAndDimmed();
         } else if (dataLogger != null) {
             locationListener.close();
             locationListener = null;
@@ -47,6 +53,22 @@ public class EnableLoggingClickListener implements View.OnClickListener {
             dataLogger = null;
             cameraManager.close();
             cameraManager = null;
+            restoreBrightnessAndAllowScreenOff();
        }
+    }
+
+    private void keepScreenOnAndDimmed() {
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+        oldBrightness = lp.screenBrightness;
+        lp.screenBrightness = 0.01f;
+        activity.getWindow().setAttributes(lp);
+    }
+
+    private void restoreBrightnessAndAllowScreenOff() {
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+        lp.screenBrightness = oldBrightness;
+        activity.getWindow().setAttributes(lp);
     }
 }
