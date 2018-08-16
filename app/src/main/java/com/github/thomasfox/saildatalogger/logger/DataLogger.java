@@ -49,7 +49,7 @@ public class DataLogger {
                     .name("start")
                     .beginObject()
                     .name("format")
-                    .value("v1.2")
+                    .value("v1.3")
                     .name("startT")
                     .value(startDate.getTime())
                     .name("startTFormatted")
@@ -93,7 +93,8 @@ public class DataLogger {
                             .name("locLat").value(currentData.latitude)
                             .name("locLong").value(currentData.longitude)
                             .name("locBear").value(currentData.locationBearing)
-                            .name("locVel").value(currentData.locationVelocity);
+                            .name("locVel").value(currentData.locationVelocity)
+                            .name("locDevT").value(currentData.locationDeviceTime);
                 }
                 if (currentData.hasMagneticField()) {
                     jsonWriter.name("magT").value(currentData.magneticFieldTime)
