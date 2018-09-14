@@ -1,5 +1,6 @@
 package com.github.thomasfox.saildatalogger;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
@@ -43,8 +44,17 @@ public class MainActivity extends AppCompatActivity {
             case R.id.close:
                 finish();
                 return true;
+            case R.id.settings:
+                settings();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void settings()
+    {
+        Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        startActivity(settingsIntent);
     }
 }

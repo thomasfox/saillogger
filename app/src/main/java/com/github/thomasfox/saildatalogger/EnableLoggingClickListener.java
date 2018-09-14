@@ -12,6 +12,7 @@ import android.widget.ToggleButton;
 import com.github.thomasfox.saildatalogger.camera.CameraManager;
 import com.github.thomasfox.saildatalogger.logger.DataLogger;
 import com.github.thomasfox.saildatalogger.logger.Files;
+import com.github.thomasfox.saildatalogger.state.Settings;
 
 public class EnableLoggingClickListener implements View.OnClickListener {
 
@@ -42,7 +43,9 @@ public class EnableLoggingClickListener implements View.OnClickListener {
             dataLogger = new DataLogger(activity, statusText, trackFileNumber);
             locationListener = new LoggingLocationListener(activity, statusText, dataLogger);
             compassListener = new LoggingSensorListener(activity, dataLogger);
-            cameraManager = new CameraManager(activity, trackFileNumber);
+            if (Settings.recordVideo) {
+                cameraManager = new CameraManager(activity, trackFileNumber);
+            }
             keepScreenOnAndDimmed();
         } else if (dataLogger != null) {
             locationListener.close();
@@ -51,8 +54,10 @@ public class EnableLoggingClickListener implements View.OnClickListener {
             compassListener = null;
             dataLogger.close();
             dataLogger = null;
-            cameraManager.close();
-            cameraManager = null;
+            if (cameraManager != null) {
+                cameraManager.close();
+                cameraManager = null;
+            }
             restoreBrightnessAndAllowScreenOff();
        }
     }

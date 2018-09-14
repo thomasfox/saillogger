@@ -31,13 +31,15 @@ public class CameraManager {
 
     private int trackFileNumber;
 
+    private FrameLayout previewLayout;
+
     public CameraManager(@NonNull AppCompatActivity activity, int trackFileNumber) {
         this.activity = activity;
         this.trackFileNumber = trackFileNumber;
         if (hasCameraHardware()) {
             retrieveCameraInstance();
             preview = new CameraPreview(activity, camera, this);
-            FrameLayout previewLayout = activity.findViewById(R.id.camera_preview);
+            previewLayout = activity.findViewById(R.id.camera_preview);
             previewLayout.addView(preview);
         }
     }
@@ -126,6 +128,7 @@ public class CameraManager {
     }
 
     private void releaseMediaRecorder(){
+
         if (mMediaRecorder != null) {
             mMediaRecorder.stop();
             recording = false;
@@ -134,5 +137,6 @@ public class CameraManager {
             mMediaRecorder = null;
             camera.release();
         }
+        previewLayout.removeView(preview);
     }
 }

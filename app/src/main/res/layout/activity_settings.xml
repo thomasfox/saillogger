@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.thomasfox.saildatalogger.MainActivity">
+    tools:context="com.github.thomasfox.saildatalogger.SettingsActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/mainToolbar"
@@ -14,32 +14,20 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <FrameLayout
-        android:id="@+id/camera_preview"
-        android:layout_width="@dimen/video_preview_width"
-        android:layout_height="@dimen/video_preview_height"
-        android:layout_weight="1"
-        app:layout_constraintTop_toBottomOf="@+id/mainToolbar"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        />
-
-    <TextView
-        android:id="@+id/statusText"
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/checkboxLayout"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/log_button_standby"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/mainToolbar">
+      <CheckBox android:id="@+id/checkbox_record_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_record_video"/>
+    </LinearLayout>
 
-    <ToggleButton
-        android:id="@+id/enableLoggingButton"
+    <Button
+        android:id="@+id/settingsOkButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -48,12 +36,12 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:textOff="@string/log_button_standby"
-        android:textOn="@string/log_button_logging"
+        android:text="@string/settings_button_ok"
+        android:onClick="ok"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusText"
+        app:layout_constraintTop_toBottomOf="@+id/checkboxLayout"
         app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>

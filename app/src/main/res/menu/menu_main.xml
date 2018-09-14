@@ -3,5 +3,8 @@
     tools:context="saildatalogger.thomasfox.github.com.saildatalogger.com.github.thomasfox.saildatalogger.MainActivity">
     <item
         android:id="@+id/close"
-        android:title="@string/close"/>
+        android:title="@string/menu_close"/>
+    <item
+        android:id="@+id/settings"
+        android:title="@string/menu_settings"/>
 </menu>
