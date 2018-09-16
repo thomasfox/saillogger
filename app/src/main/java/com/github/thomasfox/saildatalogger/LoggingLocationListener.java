@@ -25,13 +25,13 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 2135;
 
-    private TextView statusText;
+    private final TextView statusText;
 
-    private LocationManager locationManager;
+    private final LocationManager locationManager;
 
-    private AppCompatActivity activity;
+    private final AppCompatActivity activity;
 
-    private DataLogger dataLogger;
+    private final DataLogger dataLogger;
 
     private Location startLocation;
 
@@ -133,12 +133,12 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
         return result;
     }
 
-    public double getY(Location location)
+    private double getY(Location location)
     {
         return location.getLatitude() / 180 * Math.PI * EARTH_RADIUS;
     }
 
-    public double getX(Location location)
+    private double getX(Location location)
     {
         return location.getLongitude() / 180 * Math.PI
                 * Math.cos(location.getLatitude() / 180 * Math.PI)

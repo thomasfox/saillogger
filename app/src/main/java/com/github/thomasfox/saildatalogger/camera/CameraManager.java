@@ -19,7 +19,7 @@ public class CameraManager {
 
     private static final String TAG = "saildatalogger";
 
-    private AppCompatActivity activity;
+    private final AppCompatActivity activity;
 
     private Camera camera = null;
 
@@ -27,9 +27,7 @@ public class CameraManager {
 
     private MediaRecorder mMediaRecorder = new MediaRecorder();
 
-    private boolean recording = false;
-
-    private int trackFileNumber;
+    private final int trackFileNumber;
 
     private FrameLayout previewLayout;
 
@@ -47,7 +45,6 @@ public class CameraManager {
     public void startVideo() {
        if (prepareVideoRecorder()) {
            mMediaRecorder.start();
-           recording = true;
        }
     }
 
@@ -131,7 +128,6 @@ public class CameraManager {
 
         if (mMediaRecorder != null) {
             mMediaRecorder.stop();
-            recording = false;
             mMediaRecorder.reset();
             mMediaRecorder.release();
             mMediaRecorder = null;

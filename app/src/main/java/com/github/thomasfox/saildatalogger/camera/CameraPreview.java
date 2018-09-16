@@ -12,8 +12,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     private static final String TAG = "saildatalogger";
 
-    private Camera camera;
-    private CameraManager cameraManager;
+    private final Camera camera;
+
+    private final CameraManager cameraManager;
 
     public CameraPreview(Context context, Camera camera, CameraManager cameraManger) {
         super(context);

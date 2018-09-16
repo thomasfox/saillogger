@@ -12,9 +12,9 @@ import com.github.thomasfox.saildatalogger.logger.DataLogger;
 
 class LoggingSensorListener implements SensorEventListener {
 
-    private SensorManager sensorManager;
+    private final SensorManager sensorManager;
 
-    private DataLogger dataLogger;
+    private final DataLogger dataLogger;
 
     private static final int POLLING_INTERVAL_MICROS = 500000;
 

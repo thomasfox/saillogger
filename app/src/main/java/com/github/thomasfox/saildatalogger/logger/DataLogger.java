@@ -14,16 +14,19 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class DataLogger {
     /** The current sensor readings. */
-    private LoggingData currentData = new LoggingData();
+    private final LoggingData currentData = new LoggingData();
 
-    private AppCompatActivity activity;
+    private final AppCompatActivity activity;
 
-    private TextView statusText;
+    private final TextView statusText;
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy' 'HH:mm:ss.SSSZ");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat(
+            "dd.MM.yyyy' 'HH:mm:ss.SSSZ",
+            Locale.GERMANY);
 
     private JsonWriter jsonWriter;
 

@@ -1,5 +1,4 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
     <dimen name="video_preview_width">100dp</dimen>
     <dimen name="video_preview_height">100dp</dimen>
 </resources>

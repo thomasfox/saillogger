@@ -4,7 +4,7 @@ import android.location.Location;
 
 import java.util.Date;
 
-public class LoggingData {
+class LoggingData {
     // time from GPS signal
     public Long locationTime;
 

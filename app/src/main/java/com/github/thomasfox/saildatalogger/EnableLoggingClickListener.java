@@ -1,7 +1,5 @@
 package com.github.thomasfox.saildatalogger;
 
-import android.content.Context;
-import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.view.View;
@@ -14,9 +12,9 @@ import com.github.thomasfox.saildatalogger.logger.DataLogger;
 import com.github.thomasfox.saildatalogger.logger.Files;
 import com.github.thomasfox.saildatalogger.state.Settings;
 
-public class EnableLoggingClickListener implements View.OnClickListener {
+class EnableLoggingClickListener implements View.OnClickListener {
 
-    private TextView statusText;
+    private final TextView statusText;
 
     private LoggingLocationListener locationListener;
 
@@ -26,7 +24,7 @@ public class EnableLoggingClickListener implements View.OnClickListener {
 
     private CameraManager cameraManager;
 
-    private AppCompatActivity activity;
+    private final AppCompatActivity activity;
 
     private float oldBrightness;
 
