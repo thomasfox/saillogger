@@ -18,6 +18,8 @@ class LoggingData {
 
     public Float locationVelocity;
 
+    public Double locationAltitude;
+
     // device time when GPS data was recorded
     public Long locationDeviceTime;
 
@@ -47,6 +49,7 @@ class LoggingData {
         locationAccuracy = location.getAccuracy();
         locationBearing = location.getBearing();
         locationVelocity = location.getSpeed();
+        locationAltitude = location.getAltitude();
         locationDeviceTime = new Date().getTime();
     }
 
@@ -71,6 +74,7 @@ class LoggingData {
         locationAccuracy = null;
         locationBearing = null;
         locationVelocity = null;
+        locationAltitude = null;
         magneticFieldTime = null;
         magneticFieldX = null;
         magneticFieldY = null;
@@ -87,7 +91,8 @@ class LoggingData {
                 || longitude != null
                 || locationAccuracy != null
                 || locationBearing != null
-                || locationVelocity != null);
+                || locationVelocity != null
+                || locationAltitude != null);
     }
 
     public boolean hasMagneticField() {

@@ -101,6 +101,7 @@ public class DataLogger {
                             .name("locLong").value(currentData.longitude)
                             .name("locBear").value(currentData.locationBearing)
                             .name("locVel").value(currentData.locationVelocity)
+                            .name("locAlt").value(currentData.locationAltitude)
                             .name("locDevT").value(currentData.locationDeviceTime);
                 }
                 if (currentData.hasMagneticField()) {
