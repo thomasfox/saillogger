@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SailDataLogger</string>
-    <string name="app_version">v0.1.2a</string>
+    <string name="app_version">v0.1.2b</string>
 
     <string name="menu_close">Close</string>
     <string name="menu_settings">Settings</string>
