@@ -26,7 +26,7 @@ class EnableLoggingClickListener implements View.OnClickListener {
 
     private final AppCompatActivity activity;
 
-    private float oldBrightness;
+    private Float oldBrightness;
 
     EnableLoggingClickListener(TextView statusText, AppCompatActivity activity) {
         this.statusText = statusText;
@@ -44,7 +44,9 @@ class EnableLoggingClickListener implements View.OnClickListener {
             if (Settings.recordVideo) {
                 cameraManager = new CameraManager(activity, trackFileNumber);
             }
-            keepScreenOnAndDimmed();
+
+            keepScreenOn();
+            adjustScreenBrightnessForLogging();
         } else if (dataLogger != null) {
             locationListener.close();
             locationListener = null;
@@ -60,18 +62,28 @@ class EnableLoggingClickListener implements View.OnClickListener {
        }
     }
 
-    private void keepScreenOnAndDimmed() {
+    private void keepScreenOn() {
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-        oldBrightness = lp.screenBrightness;
-        lp.screenBrightness = 0.01f;
-        activity.getWindow().setAttributes(lp);
+    }
+
+    private void adjustScreenBrightnessForLogging() {
+        if (Settings.dimScreen) {
+            WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+            oldBrightness = lp.screenBrightness;
+            lp.screenBrightness = 0.01f;
+            activity.getWindow().setAttributes(lp);
+        }
+        else {
+            oldBrightness = null;
+        }
     }
 
     private void restoreBrightnessAndAllowScreenOff() {
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-        lp.screenBrightness = oldBrightness;
+        if (oldBrightness != null) {
+            lp.screenBrightness = oldBrightness;
+        }
         activity.getWindow().setAttributes(lp);
     }
 }

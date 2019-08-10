@@ -125,13 +125,16 @@ public class CameraManager {
     }
 
     private void releaseMediaRecorder(){
-
-        if (mMediaRecorder != null) {
-            mMediaRecorder.stop();
-            mMediaRecorder.reset();
-            mMediaRecorder.release();
-            mMediaRecorder = null;
-            camera.release();
+        try {
+            if (mMediaRecorder != null) {
+                mMediaRecorder.stop();
+                mMediaRecorder.reset();
+                mMediaRecorder.release();
+                mMediaRecorder = null;
+                camera.release();
+            }
+        } catch (RuntimeException e) {
+            Log.d(TAG, "Exception releasing MediaRecorder: " + e.getMessage());
         }
         previewLayout.removeView(preview);
     }

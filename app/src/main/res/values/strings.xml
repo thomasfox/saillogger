@@ -6,6 +6,7 @@
     <string name="menu_settings">Settings</string>
 
     <string name="settings_record_video">Record Video</string>
+    <string name="settings_dim_screen">Dim screen while logging</string>
 
     <string name="log_button_logging">Stop logging</string>
     <string name="log_button_standby">Start logging</string>

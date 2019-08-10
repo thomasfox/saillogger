@@ -20,10 +20,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/mainToolbar">
-      <CheckBox android:id="@+id/checkbox_record_video"
+        <CheckBox android:id="@+id/checkbox_record_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings_record_video"/>
+        <CheckBox android:id="@+id/checkbox_dim_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_dim_screen"/>
     </LinearLayout>
 
     <Button
