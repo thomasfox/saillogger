@@ -3,13 +3,13 @@ package com.github.thomasfox.saildatalogger;
 import android.support.v7.app.AppCompatActivity;
 
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.github.thomasfox.saildatalogger.camera.CameraManager;
 import com.github.thomasfox.saildatalogger.logger.DataLogger;
 import com.github.thomasfox.saildatalogger.logger.Files;
+import com.github.thomasfox.saildatalogger.screen.ScreenManager;
 import com.github.thomasfox.saildatalogger.state.Settings;
 
 class EnableLoggingClickListener implements View.OnClickListener {
@@ -26,11 +26,14 @@ class EnableLoggingClickListener implements View.OnClickListener {
 
     private final AppCompatActivity activity;
 
-    private Float oldBrightness;
+    private final ScreenManager screenManager;
 
-    EnableLoggingClickListener(TextView statusText, AppCompatActivity activity) {
+    EnableLoggingClickListener(
+            TextView statusText,
+            MainActivity activity) {
         this.statusText = statusText;
         this.activity = activity;
+        this.screenManager = activity.getScreenManager();
     }
 
     @Override
@@ -44,9 +47,10 @@ class EnableLoggingClickListener implements View.OnClickListener {
             if (Settings.recordVideo) {
                 cameraManager = new CameraManager(activity, trackFileNumber);
             }
-
-            keepScreenOn();
-            adjustScreenBrightnessForLogging();
+            screenManager.disableScreenOff();
+            if (Settings.dimScreen) {
+                screenManager.minimizeBrightness();
+             }
         } else if (dataLogger != null) {
             locationListener.close();
             locationListener = null;
@@ -58,32 +62,8 @@ class EnableLoggingClickListener implements View.OnClickListener {
                 cameraManager.close();
                 cameraManager = null;
             }
-            restoreBrightnessAndAllowScreenOff();
+            screenManager.restoreSystemBrightness();
+            screenManager.allowScreenOff();
        }
-    }
-
-    private void keepScreenOn() {
-        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
-
-    private void adjustScreenBrightnessForLogging() {
-        if (Settings.dimScreen) {
-            WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-            oldBrightness = lp.screenBrightness;
-            lp.screenBrightness = 0.01f;
-            activity.getWindow().setAttributes(lp);
-        }
-        else {
-            oldBrightness = null;
-        }
-    }
-
-    private void restoreBrightnessAndAllowScreenOff() {
-        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-        if (oldBrightness != null) {
-            lp.screenBrightness = oldBrightness;
-        }
-        activity.getWindow().setAttributes(lp);
     }
 }

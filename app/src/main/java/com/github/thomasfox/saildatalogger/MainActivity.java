@@ -10,9 +10,14 @@ import android.view.MenuItem;
 import android.widget.ToggleButton;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import com.github.thomasfox.saildatalogger.screen.BrightnessListener;
+import com.github.thomasfox.saildatalogger.screen.ScreenManager;
+
+public class MainActivity extends AppCompatActivity implements BrightnessListener {
 
     private TextView statusText;
+
+    private ScreenManager screenManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,15 +25,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         statusText = findViewById(R.id.statusText);
+        screenManager = new ScreenManager(this);
+        screenManager.registerBrightnessListener(this);
 
         ToggleButton enableLoggingButton = findViewById(R.id.enableLoggingButton);
         enableLoggingButton.setOnClickListener(new EnableLoggingClickListener(statusText,this));
+
+        ToggleButton dimScreenButton = findViewById(R.id.dimScreenButton);
+        dimScreenButton.setOnClickListener(new DimScreenClickListener(this));
 
         setSupportActionBar((Toolbar) findViewById(R.id.mainToolbar));
         getSupportActionBar().setTitle(
                 getResources().getString(R.string.app_name) + " "
                         + getResources().getString(R.string.app_version));
     }
+
+    public ScreenManager getScreenManager() {
+        return screenManager;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,5 +71,13 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
         startActivity(settingsIntent);
+    }
+
+    @Override
+    public void brightnessChanged(boolean systemBrightnessRestored) {
+        ToggleButton dimScreenButton = findViewById(R.id.dimScreenButton);
+        if (dimScreenButton.isChecked() == systemBrightnessRestored) {
+            dimScreenButton.setChecked(!systemBrightnessRestored);
+        }
     }
 }

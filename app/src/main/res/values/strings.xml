@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SailDataLogger</string>
-    <string name="app_version">v0.1.3</string>
+    <string name="app_version">v0.1.3a</string>
 
     <string name="menu_close">Close</string>
     <string name="menu_settings">Settings</string>
@@ -8,8 +8,11 @@
     <string name="settings_record_video">Record Video</string>
     <string name="settings_dim_screen">Dim screen while logging</string>
 
-    <string name="log_button_logging">Stop logging</string>
-    <string name="log_button_standby">Start logging</string>
+    <string name="log_status_standby">Standby</string>
+    <string name="button_start_logging">Start logging</string>
+    <string name="button_stop_logging">Stop logging</string>
+    <string name="button_dim_screen">Dim screen</string>
+    <string name="button_reset_screen_dimming">Stop dimming</string>
 
     <string name="settings_button_ok">OK</string>
     <string name="settings_label">Settings</string>
