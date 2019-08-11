@@ -19,6 +19,10 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
 
     private ScreenManager screenManager;
 
+    private EnableLoggingClickListener enableLoggingClickListener;
+
+    private ToggleButton enableLoggingButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,8 +32,9 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         screenManager = new ScreenManager(this);
         screenManager.registerBrightnessListener(this);
 
-        ToggleButton enableLoggingButton = findViewById(R.id.enableLoggingButton);
-        enableLoggingButton.setOnClickListener(new EnableLoggingClickListener(statusText,this));
+        enableLoggingClickListener = new EnableLoggingClickListener(statusText,this);
+        enableLoggingButton = findViewById(R.id.enableLoggingButton);
+        enableLoggingButton.setOnClickListener(enableLoggingClickListener);
 
         ToggleButton dimScreenButton = findViewById(R.id.dimScreenButton);
         dimScreenButton.setOnClickListener(new DimScreenClickListener(this));
@@ -79,5 +84,13 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         if (dimScreenButton.isChecked() == systemBrightnessRestored) {
             dimScreenButton.setChecked(!systemBrightnessRestored);
         }
+    }
+
+    public EnableLoggingClickListener getEnableLoggingClickListener() {
+        return enableLoggingClickListener;
+    }
+
+    public ToggleButton getEnableLoggingButton() {
+        return enableLoggingButton;
     }
 }
