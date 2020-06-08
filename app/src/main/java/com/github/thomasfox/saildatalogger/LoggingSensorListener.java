@@ -7,10 +7,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.github.thomasfox.saildatalogger.logger.DataLogger;
 
 class LoggingSensorListener implements SensorEventListener {
+
+    private static final String TAG = "saildatalogger";
 
     private final SensorManager sensorManager;
 
@@ -33,7 +36,8 @@ class LoggingSensorListener implements SensorEventListener {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             dataLogger.setAcceleration(event.values);
         }
-        else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+        else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD
+                || event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED) {
             dataLogger.setMagneticField(event.values);
         }
     }
@@ -44,7 +48,16 @@ class LoggingSensorListener implements SensorEventListener {
 
     private void registerSensorListener()
     {
-        Sensor compass = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        Sensor compass = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED);
+        if (compass == null)
+        {
+            Log.i(TAG, "Using calibrated magnetic field sensor.");
+            compass = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        }
+        else
+        {
+            Log.i(TAG, "Using uncalibrated magnetic field sensor.");
+        }
         sensorManager.registerListener(this, compass, POLLING_INTERVAL_MICROS);
         Sensor acceleration = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, acceleration, POLLING_INTERVAL_MICROS);

@@ -1,12 +1,15 @@
 package com.github.thomasfox.saildatalogger.logger;
 
+import android.app.DialogFragment;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.JsonWriter;
 import android.widget.TextView;
 
 import com.github.thomasfox.saildatalogger.R;
+import com.github.thomasfox.saildatalogger.WroteFileDialogFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +27,8 @@ public class DataLogger {
 
     private final TextView statusText;
 
+    private final File storageFile;
+
     private final SimpleDateFormat dateFormat = new SimpleDateFormat(
             "dd.MM.yyyy' 'HH:mm:ss.SSSZ",
             Locale.GERMANY);
@@ -34,7 +39,7 @@ public class DataLogger {
     {
         this.activity = activity;
         this.statusText = statusText;
-        File storageFile = Files.getTrackFile(trackFileNumber);
+        this.storageFile = Files.getTrackFile(trackFileNumber);
         try {
             if (!isExternalStorageWritable())
             {
@@ -149,6 +154,13 @@ public class DataLogger {
                         e.getMessage()));
             }
         }
+        DialogFragment dialogFragment = new WroteFileDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(
+                WroteFileDialogFragment.FILE_LOCATION_BUNDLE_KEY,
+                storageFile.getAbsolutePath());
+        dialogFragment.setArguments(bundle);
+        dialogFragment.show(activity.getFragmentManager(), "wroteFileDialog");
      }
 
     private boolean isExternalStorageWritable() {

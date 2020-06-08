@@ -9,8 +9,6 @@ import android.util.Log;
 
 public class StopLoggingDialogFragment extends DialogFragment {
 
-    private static final String TAG = "saildatalogger";
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -25,7 +23,6 @@ public class StopLoggingDialogFragment extends DialogFragment {
                 ((MainActivity) getActivity()).getEnableLoggingButton().setChecked(true);
             }
         });
-        // Create the AlertDialog object and return it
         return builder.create();
     }
 }
