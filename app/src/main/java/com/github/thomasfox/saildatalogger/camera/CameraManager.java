@@ -107,7 +107,7 @@ public class CameraManager {
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
         mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_LOW));
-        mMediaRecorder.setOutputFile(Files.getVideoFile(trackFileNumber).toString());
+        mMediaRecorder.setOutputFile(Files.getVideoFile(trackFileNumber, activity).toString());
         mMediaRecorder.setPreviewDisplay(preview.getHolder().getSurface());
 
         try {

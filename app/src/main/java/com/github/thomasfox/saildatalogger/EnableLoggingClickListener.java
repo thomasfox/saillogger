@@ -49,7 +49,7 @@ class EnableLoggingClickListener implements View.OnClickListener {
     }
 
     private void startLogging() {
-        int trackFileNumber = Files.getTrackFileNumber();
+        int trackFileNumber = Files.getTrackFileNumber(activity);
         dataLogger = new DataLogger(activity, statusText, trackFileNumber);
         locationListener = new LoggingLocationListener(activity, statusText, dataLogger);
         compassListener = new LoggingSensorListener(activity, dataLogger);

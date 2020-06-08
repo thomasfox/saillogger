@@ -39,7 +39,7 @@ public class DataLogger {
     {
         this.activity = activity;
         this.statusText = statusText;
-        this.storageFile = Files.getTrackFile(trackFileNumber);
+        this.storageFile = Files.getTrackFile(trackFileNumber, activity);
         try {
             if (!isExternalStorageWritable())
             {

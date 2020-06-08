@@ -1,6 +1,6 @@
 package com.github.thomasfox.saildatalogger.logger;
 
-import android.os.Environment;
+import android.app.Activity;
 import android.util.Log;
 
 import java.io.File;
@@ -13,8 +13,12 @@ public class Files {
     private static final String TRACK_FILE_NAME_SUFFIX = ".saillog";
     private static final String VIDEO_FILE_NAME_SUFFIX = ".mp4";
 
-    private static File getStorageDir() {
-        File file = new File(Environment.getExternalStorageDirectory(), "/saillogger");
+    private static File getStorageDir(Activity activitiy) {
+        File file = activitiy.getExternalFilesDir(null);
+        if  (file == null)
+        {
+            throw new RuntimeException("Cannot access externalFilesDir");
+        }
         if (!file.exists()) {
             if (!file.mkdirs()) {
                 Log.w(TAG, "Error creating directory " + file.getAbsolutePath());
@@ -23,20 +27,20 @@ public class Files {
         return file;
     }
 
-    public static File getTrackFile(int trackFileNumber) {
+    public static File getTrackFile(int trackFileNumber, Activity activitiy) {
         return new File(
-                getStorageDir(),
+                getStorageDir(activitiy),
                 TRACK_FILE_NAME_PREFIX + trackFileNumber + TRACK_FILE_NAME_SUFFIX);
     }
 
-    public static File getVideoFile(int trackFileNumber) {
+    public static File getVideoFile(int trackFileNumber, Activity activitiy) {
         return new File(
-                getStorageDir(),
+                getStorageDir(activitiy),
                 TRACK_FILE_NAME_PREFIX + trackFileNumber + VIDEO_FILE_NAME_SUFFIX);
     }
 
-    public static Integer getTrackFileNumber() {
-        File dir = getStorageDir();
+    public static Integer getTrackFileNumber(Activity activitiy) {
+        File dir = getStorageDir(activitiy);
         File[] files = dir.listFiles();
         int nextNumber = 1;
         if (files != null) {
@@ -47,7 +51,7 @@ public class Files {
                             TRACK_FILE_NAME_PREFIX.length(),
                             file.getName().length() - TRACK_FILE_NAME_SUFFIX.length());
 
-                    Integer trackNumber;
+                    int trackNumber;
                     try {
                         trackNumber = Integer.parseInt(trackNumberString);
                     } catch (NumberFormatException e) {
