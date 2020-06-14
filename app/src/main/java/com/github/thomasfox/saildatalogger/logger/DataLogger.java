@@ -2,6 +2,7 @@ package com.github.thomasfox.saildatalogger.logger;
 
 import android.app.DialogFragment;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +67,10 @@ public class DataLogger {
                     .value(startDate.getTime())
                     .name("startTFormatted")
                     .value(dateFormat.format(startDate))
+                    .name("recordedByManufactorer")
+                    .value(Build.MANUFACTURER)
+                    .name("recordedByModel")
+                    .value(Build.MODEL)
                     .endObject()
                     .name("track");
             jsonWriter.beginArray();
