@@ -58,7 +58,7 @@ public class DataLogger {
                     .name("start")
                     .beginObject()
                     .name("format")
-                    .value("v1.4")
+                    .value("v1.5")
                     .name("loggedBy")
                     .value("saildatalogger")
                     .name("loggedByVersion")
