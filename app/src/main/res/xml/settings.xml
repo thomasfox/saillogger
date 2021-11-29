@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreferenceCompat
+        app:key="recordVideo"
+        app:title="Record Video"/>
+    <SwitchPreferenceCompat
+        app:key="dimScreenWhileLogging"
+        app:title="Dim Screen while logging"/>
+
+    <EditTextPreference
+        app:key="bleDeviceName"
+        app:title="BLE Device Name"/>
+
+    <EditTextPreference
+        app:key="bleDeviceAddress"
+        app:title="BLE Device Address"/>
+
+    <Preference
+        app:key="scanBleButton"
+        app:layout="@layout/scan_ble_button"/>
+
+</PreferenceScreen>

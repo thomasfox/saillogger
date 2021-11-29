@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+ xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.github.thomasfox.saildatalogger.MainActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/mainToolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat" />
 
     <FrameLayout
         android:id="@+id/camera_preview"
@@ -25,18 +24,45 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        />
+        android:layout_marginTop="16dp"/>
 
-    <TextView
-        android:id="@+id/statusText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/log_status_standby"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/content"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:layout_constraintTop_toBottomOf="@+id/camera_preview"
+        app:layout_constraintBottom_toTopOf="@+id/enableLoggingButton">
+
+        <TextView
+            android:id="@+id/speedText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="144sp"
+            tools:text="@tools:sample/lorem" />
+
+        <TextView
+            android:id="@+id/bearingText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="144sp"
+            tools:text="@tools:sample/lorem" />
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/log_status_standby"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+
 
     <ToggleButton
         android:id="@+id/enableLoggingButton"
@@ -50,7 +76,7 @@
         android:textOn="@string/button_stop_logging"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusText"
+        app:layout_constraintTop_toBottomOf="@+id/content"
         app:layout_constraintVertical_bias="1.0" />
 
     <ToggleButton
@@ -69,7 +95,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.669"
         app:layout_constraintStart_toEndOf="@+id/enableLoggingButton"
-        app:layout_constraintTop_toBottomOf="@+id/statusText"
+        app:layout_constraintTop_toBottomOf="@+id/content"
         app:layout_constraintVertical_bias="1.0" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

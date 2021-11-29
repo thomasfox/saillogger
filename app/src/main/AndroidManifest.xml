@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.github.thomasfox.saildatalogger">
+    package="com.github.thomasfox.saildata">
 
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <uses-feature android:name="android.hardware.location.gps" />
     <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_saillogger"
+        android:icon="@mipmap/ic_saildata"
+        android:roundIcon="@mipmap/ic_saildata_round"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_saillogger_round"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -31,8 +30,13 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/settings_label"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BluetoothLeScanActivity"
+            android:label="@string/scan_bluetooth_le_devices"
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
