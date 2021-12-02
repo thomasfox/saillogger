@@ -13,12 +13,15 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.github.thomasfox.saildata.R;
 
+/**
+ * Scans bluetooth LE devices and notifies a callback object about found devices.
+ * Can display status messages to a TextView, if desired.
+ */
 public class BleScannerWithStatusView extends ScanCallback {
 
     private static final String LOG_TAG ="Saildata:BLEScanner";
@@ -35,13 +38,13 @@ public class BleScannerWithStatusView extends ScanCallback {
 
     private boolean scanning;
 
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
 
-    private TextView messageView;
+    private final TextView messageView;
 
-    BleScanCallback bleScanCallback;
+    private final BleScanCallback bleScanCallback;
 
-    public BleScannerWithStatusView(@NonNull TextView messageView, BleScanCallback bleScanCallback) {
+    public BleScannerWithStatusView(TextView messageView, BleScanCallback bleScanCallback) {
         this.messageView = messageView;
         this.bleScanCallback = bleScanCallback;
     }
@@ -72,24 +75,25 @@ public class BleScannerWithStatusView extends ScanCallback {
 
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stopScanInternal();
-                Log.i(LOG_TAG, "Stopped bluetooth LE scan");
+        handler.postDelayed(() -> {
+            stopScanInternal();
+            Log.i(LOG_TAG, "Stopped bluetooth LE scan");
+            if (messageView != null) {
                 messageView.setText(R.string.scan_finished);
-                bleScanCallback.scanFinished();
             }
+            bleScanCallback.scanFinished();
         }, BLUETOOTH_DEVICE_SCAN_PERIOD_MILLIS);
 
-        messageView.setText(R.string.scanning_bluetooth_le_devices);
+        if (messageView != null) {
+            messageView.setText(R.string.scanning_bluetooth_le_devices);
+        }
         Log.i(LOG_TAG, "Started bluetooth LE scan");
         bluetoothLeScanner.startScan(this);
     }
 
     public void stopScan() {
         Log.i(LOG_TAG, "StopScan called");
-        if (scanning) {
+        if (scanning && messageView != null) {
             messageView.setText(R.string.scan_canceled);
         }
         stopScanInternal();
