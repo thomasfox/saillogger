@@ -61,7 +61,7 @@ class EnableLoggingClickListener implements View.OnClickListener {
     private void startLogging() {
         int trackFileNumber = Files.getTrackFileNumber(activity);
         dataLogger = new DataLogger(activity, statusTextView, trackFileNumber);
-        BLESender bluetoothSender = new BLESender(activity, statusTextView);
+        BLESender bluetoothSender = new BLESender(activity);
         locationListener = new LoggingLocationListener(
                 activity,
                 statusTextView,

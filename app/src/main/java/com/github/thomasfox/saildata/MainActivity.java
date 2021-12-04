@@ -128,12 +128,12 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         @Override
         public void run()
         {
-            BLESender bluetoothSender = new BLESender(activity, statusTextView);
+            BLESender bluetoothSender = new BLESender(activity);
             for (int i=0; i < 99; i++) {
                 Log.i(LOG_TAG, "Sending to Bluetooth: " + i);
                 bluetoothSender.sendLineIfConnected(Integer.toString(i));
-                Log.i(LOG_TAG, "Reading from Bluetooth...");
-                bluetoothSender.receiveAndLogIfConnected();
+//                Log.i(LOG_TAG, "Reading from Bluetooth...");
+//                bluetoothSender.receiveAndLogIfConnected();
                 Log.i(LOG_TAG, "done bluetoothing");
                 try {
                     Thread.sleep(1000L);

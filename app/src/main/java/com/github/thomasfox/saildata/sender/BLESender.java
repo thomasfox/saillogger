@@ -4,10 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanRecord;
-import android.bluetooth.le.ScanResult;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothProfile;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.widget.TextView;
@@ -15,10 +17,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -32,24 +32,28 @@ public class BLESender {
 
     private static final int MY_PERMISSIONS_REQUEST_BLUETOOTH_ADMIN = 377;
 
-    private static final String DEVICE_NAME = "HMSoft";
+    /** The uuid of the service used to send data to the BLE device. */
+    public final static UUID SERVICE_UUID =
+            UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
+
+    /** The uuid of the characteristic used to send data to the BLE device. */
+    public final static UUID CHARACTERISTIC_UUID =
+            UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
 
     private static final long CONNECT_SLEEP_TIME_MILLIS = 5000L;
 
-    private BluetoothDevice displayDevice;
+    // true if the device can be discovered but no connection can be made to the device
+    private boolean incompatibleDevice = true;
+
+    // not null if connected or while connection go to a bluetooth device
+    private BluetoothGatt bluetoothGatt;
 
     // not null if connected to a bluetooth device
-    private BluetoothSocket displaySocket;
-
-    // not null if connected to a bluetooth device
-    private OutputStream displayOutputStream;
-
-    // not null if connected to a bluetooth device
-    private InputStream displayInputStream;
+    public BluetoothGattCharacteristic bluetoothGattCharacteristic;
 
     BluetoothConnectThread bluetoothConnectThread;
 
-    public BLESender(@NonNull Activity activity, @NonNull TextView statusTextView) {
+    public BLESender(@NonNull Activity activity) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity,
@@ -69,156 +73,131 @@ public class BLESender {
                     MY_PERMISSIONS_REQUEST_BLUETOOTH_ADMIN);
         }
 
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-        for (BluetoothDevice pairedDevice : pairedDevices) {
-            String name = pairedDevice.getName();
-            statusTextView.setText("Found paired bluetooth device with name " + name);
-            if (DEVICE_NAME.equals(name))
-            {
-                displayDevice = pairedDevice;
-                connect();
-                Log.i(LOG_TAG, "Connected to bluetooth device " + name);
-                break;
-            }
-        }
-        if (displayDevice == null)
-        {
-            Log.i(LOG_TAG, "No bonded device found, scanning available devices");
-            bluetoothAdapter.getBluetoothLeScanner().startScan(new MyScanCallback());
-        }
+        connect(activity);
     }
 
-    public void connect() {
-        if (bluetoothConnectThread != null && !bluetoothConnectThread.isConnected()) {
+    public void connect(@NonNull Activity activity) {
+        if (bluetoothConnectThread != null) {
             Log.i(LOG_TAG, "Calling connect() while connecting is already in progress, ignoring");
             return;
         }
-        bluetoothConnectThread = new BluetoothConnectThread(displayDevice);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        String address = prefs.getString("bleDeviceAddress", null);
+        if (address == null) {
+            Log.i(LOG_TAG, "not connecting, address not set");
+            return;
+        }
+        bluetoothConnectThread = new BluetoothConnectThread(activity, address);
         bluetoothConnectThread.start();
-    }
-
-    private void connected(BluetoothSocket bluetoothSocket) {
-        if (this.displaySocket != null && this.displaySocket != bluetoothSocket) {
-            disconnect();
-        }
-        this.displaySocket = bluetoothSocket;
-        try {
-            this.displayOutputStream = bluetoothSocket.getOutputStream();
-            this.displayInputStream = bluetoothSocket.getInputStream();
-            sendLineIfConnected("999");
-        }
-        catch (IOException e) {
-            Log.w(LOG_TAG, "Could not get output stream from bluetooth socket, disconnecting", e);
-            disconnect();
-        }
-    }
-
-    private void disconnect()
-    {
-        Log.i(LOG_TAG, "Disconnecting from bluetooth...");
-        try {
-            displayOutputStream.close();
-        }
-        catch (IOException e) {
-            Log.w(LOG_TAG, "Could not close display output stream", e);
-        }
-        finally {
-            displayOutputStream = null;
-        }
-        try {
-            displayInputStream.close();
-        }
-        catch (IOException e) {
-            Log.w(LOG_TAG, "Could not close display input stream", e);
-        }
-        finally {
-            displayInputStream = null;
-        }
-        try {
-            displaySocket.close();
-        } catch (IOException e) {
-            Log.w(LOG_TAG, "Could not close bluetooth socket", e);
-        }
-        finally {
-            displaySocket = null;
-        }
-        Log.i(LOG_TAG, "Done Disconnecting from bluetooth");
-    }
-
-    public void sendRawIfConnected(String toSend) {
-        if (displayOutputStream != null) {
-            try {
-                displayOutputStream.write(toSend.getBytes("ISO-8859-1"));
-            }
-            catch (IOException | RuntimeException e) {
-                Log.w(LOG_TAG, "Could not send message " + toSend, e);
-                disconnect();
-                connect();
-            }
-        }
     }
 
     public void sendLineIfConnected(String toSend) {
         sendRawIfConnected(toSend + ";");
     }
 
-    public void receiveAndLogIfConnected() {
-        if (displayInputStream != null) {
-            try {
-                StringBuilder received = new StringBuilder();
-                while (displayInputStream.available() > 0) {
-                    received.append(new String(new byte[]{(byte) displayInputStream.read()}, "ISO-8859-1"));
-                }
-                if (received.length() > 0) {
-                    Log.i(LOG_TAG, "Received: " + received);
-                }
-            }
-            catch (IOException  | RuntimeException e) {
-                Log.w(LOG_TAG, "Could not read from bluetooth", e);
-            }
+    public void sendRawIfConnected(String strValue)
+    {
+        if (bluetoothGatt != null && bluetoothGattCharacteristic != null) {
+            bluetoothGattCharacteristic.setValue(strValue.getBytes());
+            bluetoothGatt.writeCharacteristic(bluetoothGattCharacteristic);
         }
-
     }
 
+    /**
+     * Connects to the GATT server hosted on the Bluetooth LE device.
+     *
+     * @param address The device address of the destination device.
+     */
+    public void connect(@NonNull Activity activity, @NonNull final String address) {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
+        if (device == null) {
+            Log.w(LOG_TAG, "Device not found.  Unable to connect.");
+            return;
+        }
+        if (bluetoothGatt != null)
+        {
+            bluetoothGatt.close();
+            bluetoothGatt = null;
+        }
+        bluetoothGatt = device.connectGatt(activity, false, new SaildataBluetoothGattCallback());
+
+        Log.d(LOG_TAG, "Started to create a new connection.");
+    }
+
+    /**
+     * After using a given BLE device, the app must call this method to ensure resources are
+     * released properly.
+     */
+    public void close() {
+        if (bluetoothGatt == null) {
+            return;
+        }
+        bluetoothGattCharacteristic = null;
+        bluetoothGatt.close();
+        bluetoothGatt = null;
+        Log.i(LOG_TAG, "Done Disconnecting from bluetooth");
+    }
+
+    public void findService(List<BluetoothGattService> serviceList)
+    {
+        Log.i(LOG_TAG, "Found " + serviceList.size() + " GATT Services");
+        for (BluetoothGattService service : serviceList)
+        {
+            if (service.getUuid().toString().equalsIgnoreCase(SERVICE_UUID.toString()))
+            {
+                Log.i(LOG_TAG, "Found matching BLE service");
+                List<BluetoothGattCharacteristic> characteristicList = service.getCharacteristics();
+                Log.i(LOG_TAG, "Found " + characteristicList.size() + " characteristics");
+                for (BluetoothGattCharacteristic characteristic : characteristicList)
+                {
+                    if (characteristic.getUuid().toString().equalsIgnoreCase(
+                            CHARACTERISTIC_UUID.toString()))
+                    {
+                        Log.i(LOG_TAG, "Found matching BLE characteristic");
+                        bluetoothGatt.setCharacteristicNotification(characteristic, true);
+                        bluetoothGattCharacteristic = characteristic;
+                        sendLineIfConnected("123");
+                        return;
+                    }
+                    else
+                    {
+                        Log.i(LOG_TAG,
+                            "Encountered unknown characteristic with UUID "
+                                    + characteristic.getUuid().toString());
+
+                    }
+                }
+            }
+            else {
+                Log.i(LOG_TAG,
+                    "Encountered unknown service with UUID " + service.getUuid().toString());
+            }
+        }
+    }
 
     private class BluetoothConnectThread extends Thread {
-        private final BluetoothSocket bluetoothSocket;
 
-        private boolean connected;
+        private final Activity activity;
 
-        public BluetoothConnectThread(BluetoothDevice device) {
-            Log.i(LOG_TAG,"Creating bluetooth socket...");
-            BluetoothSocket tmp = null;
+        private final String address;
 
-            try {
-               tmp = device.createRfcommSocketToServiceRecord(
-                       UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
-            }
-            catch (IOException e) {
-                Log.e(LOG_TAG, "Could not create bluetooth socket", e);
-            }
-            bluetoothSocket = tmp;
-            Log.i(LOG_TAG,"Done creating bluetooth socket");
+        public BluetoothConnectThread(Activity activity, String address) {
+            this.activity =activity;
+            this.address = address;
         }
 
         public void run() {
             while(!Thread.currentThread().isInterrupted()) {
                 try {
-                    Log.i(LOG_TAG,"Connecting bluetooth socket...");
-                    bluetoothSocket.connect();
-                    Log.i(LOG_TAG,"Done connecting bluetooth socket");
-                    connected = true;
-                    connected(bluetoothSocket);
+                    if (bluetoothGattCharacteristic != null) {
+                        return;
+                    }
+                    connect(activity, address);
                     return;
                 }
-                catch (IOException | RuntimeException connectException) {
-                    try {
-                        bluetoothSocket.close();
-                    }
-                    catch (IOException closeException) {
-                        Log.e(LOG_TAG, "Could not close the client socket while connecting", closeException);
-                    }
+                catch (RuntimeException connectException) {
+                    close();
                 }
 
                 try  {
@@ -227,47 +206,72 @@ public class BLESender {
                 catch (InterruptedException e) {
                      Thread.currentThread().interrupt();
                 }
-                catch(Exception e) {
+                catch(Exception ignored) {
                 }
             }
-        }
-
-        public synchronized boolean isConnected() {
-            return connected;
         }
     }
 
-    class MyScanCallback extends ScanCallback
-    {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result)
-        {
-            super.onScanResult(callbackType, result);
-            ScanRecord scanRecord = result.getScanRecord();
+    private final class SaildataBluetoothGattCallback extends BluetoothGattCallback {
 
-            if (scanRecord != null && displayDevice == null) {
-                Log.i(LOG_TAG, String.format("Device Result: %s %s", result.getDevice().getName(), result.toString()));
-                if (result.getDevice().getName().equals(DEVICE_NAME))
-                {
-                    displayDevice = result.getDevice();
-                    connect();
-                    Log.i(LOG_TAG, "Connected to bluetooth device " + result.getDevice().getName());
+        @Override
+        public void onConnectionStateChange(
+                BluetoothGatt gatt,
+                int connectionStatus,
+                int newState) {
+            if (connectionStatus == BluetoothGatt.GATT_SUCCESS)
+            {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    Log.i(LOG_TAG, "Connected to GATT server.");
+                    // Attempts to discover services after successful connection.
+                    if (bluetoothGatt.discoverServices()) {
+                        Log.i(LOG_TAG, "Service discovery started");
+                    }
+                    else
+                    {
+                        Log.i(LOG_TAG, "Failed to start service discovery, disconnecting");
+                        bluetoothGatt.close();
+                        bluetoothGatt = null;
+                        incompatibleDevice = true;
+                    }
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    bluetoothGatt.close();
+                    bluetoothGatt = null;
                 }
             }
-        }
-
-        @Override
-        public void onBatchScanResults(List<ScanResult> results)
-        {
-            for (ScanResult result : results) {
-                Log.i(LOG_TAG, String.format("ScanResult - Results: %s", result.toString()));
+            else
+            {
+                Log.i(LOG_TAG, "BLE status changed. ConnectionStatus=" + connectionStatus
+                        + " NewStatus=" + newState);
+                incompatibleDevice = true;
             }
         }
 
         @Override
-        public void onScanFailed(int errorCode)
-        {
-            Log.e(LOG_TAG, String.format("Scan Failed. Error Code: %s", errorCode));
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.i(LOG_TAG, "onServicesDiscovered received: " + status);
+                findService(gatt.getServices());
+            }
+            else {
+                Log.i(LOG_TAG, "Service discovery status changed. ConnectionStatus=" + status);
+                incompatibleDevice = true;
+            }
+        }
+
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt,
+                                         BluetoothGattCharacteristic characteristic,
+                                         int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.i(LOG_TAG, characteristic.getStringValue(0));
+            }
+        }
+
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt,
+                                            BluetoothGattCharacteristic characteristic) {
+            Log.i(LOG_TAG, characteristic.getStringValue(0));
         }
     }
 }
