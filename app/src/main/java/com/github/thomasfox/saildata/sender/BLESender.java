@@ -87,6 +87,7 @@ public class BLESender {
             Log.i(LOG_TAG, "not connecting, address not set");
             return;
         }
+        Log.i(LOG_TAG, "Creating a new connect thread...");
         bluetoothConnectThread = new BluetoothConnectThread(activity, address);
         bluetoothConnectThread.start();
     }
@@ -101,6 +102,9 @@ public class BLESender {
             bluetoothGattCharacteristic.setValue(strValue.getBytes());
             bluetoothGatt.writeCharacteristic(bluetoothGattCharacteristic);
         }
+        else {
+            Log.d(LOG_TAG, "not connected, ignoring data " + strValue);
+        }
     }
 
     /**
@@ -110,19 +114,18 @@ public class BLESender {
      */
     public void connect(@NonNull Activity activity, @NonNull final String address) {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        Log.d(LOG_TAG,
+            "Got Bluetooth adapter, looking for remote device with address " + address);
         BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
             Log.w(LOG_TAG, "Device not found.  Unable to connect.");
             return;
         }
-        if (bluetoothGatt != null)
-        {
-            bluetoothGatt.close();
-            bluetoothGatt = null;
-        }
+        Log.d(LOG_TAG, "Found device with address " + address);
+        closeWithoutLogging();
         bluetoothGatt = device.connectGatt(activity, false, new SaildataBluetoothGattCallback());
 
-        Log.d(LOG_TAG, "Started to create a new connection.");
+        Log.d(LOG_TAG, "Started to create a new GATT connection.");
     }
 
     /**
@@ -130,13 +133,17 @@ public class BLESender {
      * released properly.
      */
     public void close() {
+        closeWithoutLogging();
+        Log.i(LOG_TAG, "Done Disconnecting from bluetooth");
+    }
+
+    private void closeWithoutLogging() {
         if (bluetoothGatt == null) {
             return;
         }
         bluetoothGattCharacteristic = null;
         bluetoothGatt.close();
         bluetoothGatt = null;
-        Log.i(LOG_TAG, "Done Disconnecting from bluetooth");
     }
 
     public void findService(List<BluetoothGattService> serviceList)
@@ -157,6 +164,7 @@ public class BLESender {
                         Log.i(LOG_TAG, "Found matching BLE characteristic");
                         bluetoothGatt.setCharacteristicNotification(characteristic, true);
                         bluetoothGattCharacteristic = characteristic;
+                        incompatibleDevice = false;
                         sendLineIfConnected("123");
                         return;
                     }
@@ -219,30 +227,28 @@ public class BLESender {
                 BluetoothGatt gatt,
                 int connectionStatus,
                 int newState) {
-            if (connectionStatus == BluetoothGatt.GATT_SUCCESS)
-            {
-                if (newState == BluetoothProfile.STATE_CONNECTED) {
-                    Log.i(LOG_TAG, "Connected to GATT server.");
-                    // Attempts to discover services after successful connection.
-                    if (bluetoothGatt.discoverServices()) {
-                        Log.i(LOG_TAG, "Service discovery started");
-                    }
-                    else
-                    {
-                        Log.i(LOG_TAG, "Failed to start service discovery, disconnecting");
-                        bluetoothGatt.close();
-                        bluetoothGatt = null;
-                        incompatibleDevice = true;
-                    }
-                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    bluetoothGatt.close();
-                    bluetoothGatt = null;
+            if (connectionStatus == BluetoothGatt.GATT_SUCCESS
+                    && newState == BluetoothProfile.STATE_CONNECTED) {
+                Log.i(LOG_TAG, "Connected to GATT server.");
+                // Attempts to discover services after successful connection.
+                if (bluetoothGatt.discoverServices()) {
+                    Log.i(LOG_TAG, "Service discovery started");
                 }
+                else
+                {
+                    Log.i(LOG_TAG, "Failed to start service discovery, disconnecting");
+                    closeWithoutLogging();
+                    incompatibleDevice = true;
+                }
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                Log.i(LOG_TAG, "Disconnected from GATT Server");
+                closeWithoutLogging();
             }
             else
             {
                 Log.i(LOG_TAG, "BLE status changed. ConnectionStatus=" + connectionStatus
                         + " NewStatus=" + newState);
+                closeWithoutLogging();
                 incompatibleDevice = true;
             }
         }

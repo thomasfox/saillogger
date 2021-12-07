@@ -9,10 +9,6 @@
         app:title="Dim Screen while logging"/>
 
     <EditTextPreference
-        app:key="bleDeviceName"
-        app:title="BLE Device Name"/>
-
-    <EditTextPreference
         app:key="bleDeviceAddress"
         app:title="BLE Device Address"/>
 

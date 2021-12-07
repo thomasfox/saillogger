@@ -43,7 +43,7 @@ public class BluetoothLeScanActivity extends AppCompatActivity
         bluetoothDeviceList = new BluetoothDeviceList(this.getLayoutInflater());
         bleScanner = new BleScannerWithStatusView(messageView, this);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.mainToolbar));
+        setSupportActionBar(findViewById(R.id.mainToolbar));
         getSupportActionBar().setTitle(
                 getResources().getString(R.string.app_name) + " "
                         + getResources().getString(R.string.app_version));
@@ -90,7 +90,6 @@ public class BluetoothLeScanActivity extends AppCompatActivity
         DeviceData device = bluetoothDeviceList.getDevice(position);
         PreferenceManager.getDefaultSharedPreferences(this).edit()
                 .putString("bleDeviceAddress", device.getMacAddress())
-                .putString("bleDeviceName", device.getName())
                 .commit();
         Log.i(LOG_TAG, "Selected device with name " + device.getName() + " and address " + device.getMacAddress());
         finish();

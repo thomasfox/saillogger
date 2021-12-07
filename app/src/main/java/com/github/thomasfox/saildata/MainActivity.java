@@ -58,12 +58,11 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         ToggleButton dimScreenButton = findViewById(R.id.dimScreenButton);
         dimScreenButton.setOnClickListener(new DimScreenClickListener(this));
 
-        setSupportActionBar((Toolbar) findViewById(R.id.mainToolbar));
+        setSupportActionBar(findViewById(R.id.mainToolbar));
         getSupportActionBar().setTitle(
                 getResources().getString(R.string.app_name) + " "
                         + getResources().getString(R.string.app_version));
-        // new BluetoothTester(this, statusTextView).start();
-
+ //       new BluetoothTester(this, statusTextView).start();
     }
 
     public ScreenManager getScreenManager() {
@@ -119,16 +118,18 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
     {
         Activity activity;
         TextView statusTextView;
+        BLESender bluetoothSender;
+
 
         public BluetoothTester(Activity activity, TextView statusTextView) {
             this.activity = activity;
             this.statusTextView = statusTextView;
+            bluetoothSender = new BLESender(activity);
         }
 
         @Override
         public void run()
         {
-            BLESender bluetoothSender = new BLESender(activity);
             for (int i=0; i < 99; i++) {
                 Log.i(LOG_TAG, "Sending to Bluetooth: " + i);
                 bluetoothSender.sendLineIfConnected(Integer.toString(i));
