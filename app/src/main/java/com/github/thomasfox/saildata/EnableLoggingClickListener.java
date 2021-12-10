@@ -19,6 +19,10 @@ class EnableLoggingClickListener implements View.OnClickListener {
 
     private final TextView statusTextView;
 
+    private final TextView gpsStatusTextView;
+
+    private final TextView bleStatusTextView;
+
     private TextView speedTextView;
 
     private TextView bearingTextView;
@@ -29,6 +33,8 @@ class EnableLoggingClickListener implements View.OnClickListener {
 
     private DataLogger dataLogger;
 
+    private BLESender bluetoothSender;
+
     private CameraManager cameraManager;
 
     private final AppCompatActivity activity;
@@ -37,10 +43,14 @@ class EnableLoggingClickListener implements View.OnClickListener {
 
     EnableLoggingClickListener(
             TextView statusTextView,
+            TextView gpsStatusTextView,
+            TextView bleStatusTextView,
             TextView speedTextView,
             TextView bearingTextView,
             MainActivity activity) {
         this.statusTextView = statusTextView;
+        this.gpsStatusTextView = gpsStatusTextView;
+        this.bleStatusTextView = bleStatusTextView;
         this.speedTextView = speedTextView;
         this.bearingTextView = bearingTextView;
         this.activity = activity;
@@ -61,7 +71,7 @@ class EnableLoggingClickListener implements View.OnClickListener {
     private void startLogging() {
         int trackFileNumber = Files.getTrackFileNumber(activity);
         dataLogger = new DataLogger(activity, statusTextView, trackFileNumber);
-        BLESender bluetoothSender = new BLESender(activity);
+        bluetoothSender = new BLESender(activity, bleStatusTextView);
         locationListener = new LoggingLocationListener(
                 activity,
                 statusTextView,
@@ -85,6 +95,8 @@ class EnableLoggingClickListener implements View.OnClickListener {
     void stopLogging() {
         locationListener.close();
         locationListener = null;
+        bluetoothSender.close();
+        bluetoothSender = null;
         compassListener.close();
         compassListener = null;
         dataLogger.close();

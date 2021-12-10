@@ -18,7 +18,17 @@
     <string name="speed_no_value_text">-.-</string>
     <string name="bearing_no_value_text">---°</string>
 
-    <string name="log_status_standby">Standby</string>
+    <string name="status_standby">Standby</string>
+    <string name="status_gps_placeholder">GPS</string>
+    <string name="status_gps_tag">GPS: %1$s</string>
+    <string name="status_off">off</string>
+    <string name="status_wait_for_fix">wait for fix</string>
+    <string name="status_ble_placeholder">BLE</string>
+    <string name="status_ble_tag">BLE: %1$s</string>
+    <string name="status_connecting">connecting</string>
+    <string name="status_find_services">finding services</string>
+    <string name="status_connected">connected</string>
+
     <string name="button_start_logging">Start logging</string>
     <string name="button_stop_logging">Stop logging</string>
     <string name="button_dim_screen">Dim screen</string>

@@ -5,13 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.thomasfox.saildatalogger.MainActivity">
+    tools:context="com.github.thomasfox.saildata.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/mainToolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        app:popupTheme="@style/ThemeOverlay.AppCompat" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat"/>
 
     <FrameLayout
         android:id="@+id/camera_preview"
@@ -54,13 +54,41 @@
             android:textColor="@color/colorPrimary"
             android:textSize="144sp"
             tools:text="@tools:sample/lorem" />
-        <TextView
-            android:id="@+id/statusText"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:id="@+id/statusLayout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/log_status_standby"
-            android:textColor="@color/colorPrimary"
-            android:gravity="center_horizontal" />
+            android:layout_weight="0.1"
+            android:gravity="bottom"
+            app:layout_constraintTop_toBottomOf="@+id/bearingText"
+            app:layout_constraintBottom_toTopOf="@+id/enableLoggingButton">
+            <TextView
+                android:id="@+id/statusGpsText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/status_gps_placeholder"
+                android:textColor="@color/colorPrimary" />
+            <TextView
+                android:id="@+id/statusBleText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/status_ble_placeholder"
+                android:textColor="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="@string/status_standby"
+                android:textColor="@color/colorPrimary" />
+        </LinearLayout>
     </LinearLayout>
 
 

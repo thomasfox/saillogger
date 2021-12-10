@@ -19,8 +19,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
+import com.github.thomasfox.saildata.R;
+
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class BLESender {
@@ -42,6 +43,10 @@ public class BLESender {
 
     private static final long CONNECT_SLEEP_TIME_MILLIS = 5000L;
 
+    private final Activity activity;
+
+    private final TextView statusTextView;
+
     // true if the device can be discovered but no connection can be made to the device
     private boolean incompatibleDevice = true;
 
@@ -53,7 +58,10 @@ public class BLESender {
 
     BluetoothConnectThread bluetoothConnectThread;
 
-    public BLESender(@NonNull Activity activity) {
+    public BLESender(@NonNull Activity activity, @NonNull TextView statusTextView) {
+        this.activity = activity;
+        this.statusTextView = statusTextView;
+
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity,
@@ -81,6 +89,7 @@ public class BLESender {
             Log.i(LOG_TAG, "Calling connect() while connecting is already in progress, ignoring");
             return;
         }
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         String address = prefs.getString("bleDeviceAddress", null);
         if (address == null) {
@@ -105,6 +114,13 @@ public class BLESender {
         else {
             Log.d(LOG_TAG, "not connected, ignoring data " + strValue);
         }
+    }
+
+    private void statusChanged(int statusTextResourceId) {
+        statusTextView.setText(String.format(
+                activity.getResources().getString(R.string.status_ble_tag),
+                activity.getResources().getString(statusTextResourceId)));
+
     }
 
     /**
@@ -144,6 +160,7 @@ public class BLESender {
         bluetoothGattCharacteristic = null;
         bluetoothGatt.close();
         bluetoothGatt = null;
+        statusChanged(R.string.status_off);
     }
 
     public void findService(List<BluetoothGattService> serviceList)
@@ -165,6 +182,7 @@ public class BLESender {
                         bluetoothGatt.setCharacteristicNotification(characteristic, true);
                         bluetoothGattCharacteristic = characteristic;
                         incompatibleDevice = false;
+                        statusChanged(R.string.status_connected);
                         sendLineIfConnected("123");
                         return;
                     }
@@ -196,6 +214,7 @@ public class BLESender {
         }
 
         public void run() {
+            statusChanged(R.string.status_connecting);
             while(!Thread.currentThread().isInterrupted()) {
                 try {
                     if (bluetoothGattCharacteristic != null) {
@@ -229,6 +248,7 @@ public class BLESender {
                 int newState) {
             if (connectionStatus == BluetoothGatt.GATT_SUCCESS
                     && newState == BluetoothProfile.STATE_CONNECTED) {
+                statusChanged(R.string.status_find_services);
                 Log.i(LOG_TAG, "Connected to GATT server.");
                 // Attempts to discover services after successful connection.
                 if (bluetoothGatt.discoverServices()) {

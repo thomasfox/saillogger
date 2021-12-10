@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.github.thomasfox.saildata.screen.BrightnessListener;
 import com.github.thomasfox.saildata.screen.ScreenManager;
@@ -23,6 +22,10 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
     private static final String LOG_TAG ="Saildata:Main";
 
     private TextView statusTextView;
+
+    private TextView gpsStatusTextView;
+
+    private TextView bleStatusTextView;
 
     private TextView speedTextView;
 
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         setContentView(R.layout.activity_main);
 
         statusTextView = findViewById(R.id.statusText);
+        gpsStatusTextView = findViewById(R.id.statusGpsText);
+        bleStatusTextView = findViewById(R.id.statusBleText);
         speedTextView = findViewById(R.id.speedText);
         speedTextView.setText(getResources().getString(R.string.speed_no_value_text));
         bearingTextView = findViewById(R.id.bearingText);
@@ -49,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
 
         enableLoggingClickListener = new EnableLoggingClickListener(
                 statusTextView,
+                gpsStatusTextView,
+                bleStatusTextView,
                 speedTextView,
                 bearingTextView,
                 this);
@@ -62,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         getSupportActionBar().setTitle(
                 getResources().getString(R.string.app_name) + " "
                         + getResources().getString(R.string.app_version));
- //       new BluetoothTester(this, statusTextView).start();
+ //       new BluetoothTester(this, bleStatusTextView).start();
     }
 
     public ScreenManager getScreenManager() {
@@ -124,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         public BluetoothTester(Activity activity, TextView statusTextView) {
             this.activity = activity;
             this.statusTextView = statusTextView;
-            bluetoothSender = new BLESender(activity);
+            bluetoothSender = new BLESender(activity, statusTextView);
         }
 
         @Override
