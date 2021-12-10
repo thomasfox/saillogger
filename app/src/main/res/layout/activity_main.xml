@@ -81,7 +81,7 @@
                 android:textColor="@color/colorPrimary" />
 
             <TextView
-                android:id="@+id/statusText"
+                android:id="@+id/locationText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"

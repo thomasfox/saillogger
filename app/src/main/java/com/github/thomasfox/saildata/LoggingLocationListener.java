@@ -29,9 +29,11 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
 
     private final TextView statusTextView;
 
-    private TextView speedTextView;
+    private final TextView locationTextView;
 
-    private TextView bearingTextView;
+    private final TextView speedTextView;
+
+    private final TextView bearingTextView;
 
     private final LocationManager locationManager;
 
@@ -50,12 +52,14 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
     LoggingLocationListener(
             @NonNull AppCompatActivity activity,
             @NonNull TextView statusTextView,
+            @NonNull TextView locationTextView,
             @NonNull TextView speedTextView,
             @NonNull TextView bearingTextView,
             @NonNull DataLogger dataLogger,
             BLESender bluetoothSender) {
         this.activity = activity;
         this.statusTextView = statusTextView;
+        this.locationTextView = locationTextView;
         this.speedTextView = speedTextView;
         this.bearingTextView = bearingTextView;
         this.dataLogger = dataLogger;
@@ -78,7 +82,16 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
         if (startLocation == null) {
             startLocation = location;
         }
-        statusTextView.setText(getLocationText(location));
+        if (location.hasAccuracy()) {
+            statusTextView.setText(activity.getResources().getString(
+                    R.string.info_gps_accuracy,
+                    location.getAccuracy() + "m"));
+        }
+        else {
+            statusTextView.setText(activity.getResources().getString(
+                    R.string.info_gps_fix));
+        }
+        locationTextView.setText(getLocationText(location));
         speedTextView.setText(getSpeedText(location));
         bearingTextView.setText(getBearingText(location));
         dataLogger.setLocation(location);
@@ -108,7 +121,7 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
                     LOCATION_POLLING_INTERVAL_MILLIS,
                     LOCATION_MIN_DISTANCE_METERS,
                    this);
-            statusTextView.setText(activity.getResources().getString(R.string.info_gps_acticated));
+            statusTextView.setText(activity.getResources().getString(R.string.info_gps_wait_for_fix));
         }
         else
         {
@@ -136,6 +149,7 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
     {
         locationManager.removeUpdates(this);
         statusTextView.setText(activity.getResources().getString(R.string.info_gps_stopped));
+        locationTextView.setText(activity.getResources().getString(R.string.status_standby));
         speedTextView.setText(activity.getResources().getString(R.string.speed_no_value_text));
         bearingTextView.setText(activity.getResources().getString(R.string.bearing_no_value_text));
         startLocation = null;
@@ -145,12 +159,6 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
         String result = String.format(Locale.GERMAN, "(%.0f,%.0f)m",
                 getX(location) - getX(startLocation),
                 getY(location)  - getY(startLocation));
-        if (location.hasAccuracy()) {
-            result += " +/- " + location.getAccuracy() + "m";
-        }
-        if (location.hasBearing()) {
-            result += ", bearing " + location.getBearing();
-        }
         return result;
     }
 

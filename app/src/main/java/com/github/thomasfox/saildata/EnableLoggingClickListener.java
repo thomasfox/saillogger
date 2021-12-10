@@ -17,7 +17,7 @@ import com.github.thomasfox.saildata.sender.BLESender;
 
 class EnableLoggingClickListener implements View.OnClickListener {
 
-    private final TextView statusTextView;
+    private final TextView locationTextView;
 
     private final TextView gpsStatusTextView;
 
@@ -42,13 +42,13 @@ class EnableLoggingClickListener implements View.OnClickListener {
     private final ScreenManager screenManager;
 
     EnableLoggingClickListener(
-            TextView statusTextView,
+            TextView locationTextView,
             TextView gpsStatusTextView,
             TextView bleStatusTextView,
             TextView speedTextView,
             TextView bearingTextView,
             MainActivity activity) {
-        this.statusTextView = statusTextView;
+        this.locationTextView = locationTextView;
         this.gpsStatusTextView = gpsStatusTextView;
         this.bleStatusTextView = bleStatusTextView;
         this.speedTextView = speedTextView;
@@ -70,11 +70,12 @@ class EnableLoggingClickListener implements View.OnClickListener {
 
     private void startLogging() {
         int trackFileNumber = Files.getTrackFileNumber(activity);
-        dataLogger = new DataLogger(activity, statusTextView, trackFileNumber);
+        dataLogger = new DataLogger(activity, locationTextView, trackFileNumber);
         bluetoothSender = new BLESender(activity, bleStatusTextView);
         locationListener = new LoggingLocationListener(
                 activity,
-                statusTextView,
+                gpsStatusTextView,
+                locationTextView,
                 speedTextView,
                 bearingTextView,
                 dataLogger,

@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
 
     private static final String LOG_TAG ="Saildata:Main";
 
-    private TextView statusTextView;
+    private TextView locationTextView;
 
     private TextView gpsStatusTextView;
 
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        statusTextView = findViewById(R.id.statusText);
+        locationTextView = findViewById(R.id.locationText);
         gpsStatusTextView = findViewById(R.id.statusGpsText);
         bleStatusTextView = findViewById(R.id.statusBleText);
         speedTextView = findViewById(R.id.speedText);
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         screenManager.registerBrightnessListener(this);
 
         enableLoggingClickListener = new EnableLoggingClickListener(
-                statusTextView,
+                locationTextView,
                 gpsStatusTextView,
                 bleStatusTextView,
                 speedTextView,
