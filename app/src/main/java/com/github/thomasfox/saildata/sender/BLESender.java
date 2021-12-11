@@ -41,8 +41,6 @@ public class BLESender {
     public final static UUID CHARACTERISTIC_UUID =
             UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
 
-    private static final long CONNECT_SLEEP_TIME_MILLIS = 5000L;
-
     private final Activity activity;
 
     private final TextView statusTextView;
@@ -56,7 +54,9 @@ public class BLESender {
     // not null if connected to a bluetooth device
     public BluetoothGattCharacteristic bluetoothGattCharacteristic;
 
-    BluetoothConnectThread bluetoothConnectThread;
+    private boolean shouldBeConnected = false;
+
+    BLEConnectionWatchdog BLEConnectionWatchdog;
 
     public BLESender(@NonNull Activity activity, @NonNull TextView statusTextView) {
         this.activity = activity;
@@ -85,7 +85,9 @@ public class BLESender {
     }
 
     public void connect(@NonNull Activity activity) {
-        if (bluetoothConnectThread != null) {
+        shouldBeConnected = true;
+
+        if (BLEConnectionWatchdog != null) {
             Log.i(LOG_TAG, "Calling connect() while connecting is already in progress, ignoring");
             return;
         }
@@ -97,38 +99,22 @@ public class BLESender {
             return;
         }
         Log.i(LOG_TAG, "Creating a new connect thread...");
-        bluetoothConnectThread = new BluetoothConnectThread(activity, address);
-        bluetoothConnectThread.start();
-    }
-
-    public void sendLineIfConnected(String toSend) {
-        sendRawIfConnected(toSend + ";");
-    }
-
-    public void sendRawIfConnected(String strValue)
-    {
-        if (bluetoothGatt != null && bluetoothGattCharacteristic != null) {
-            bluetoothGattCharacteristic.setValue(strValue.getBytes());
-            bluetoothGatt.writeCharacteristic(bluetoothGattCharacteristic);
-        }
-        else {
-            Log.d(LOG_TAG, "not connected, ignoring data " + strValue);
-        }
-    }
-
-    private void statusChanged(int statusTextResourceId) {
-        statusTextView.setText(String.format(
-                activity.getResources().getString(R.string.status_ble_tag),
-                activity.getResources().getString(statusTextResourceId)));
-
+        BLEConnectionWatchdog = new BLEConnectionWatchdog(this, activity, address);
+        BLEConnectionWatchdog.start();
     }
 
     /**
-     * Connects to the GATT server hosted on the Bluetooth LE device.
+     * Connects to the GATT server on the BLE device and finds the characteristic
+     * used for communicating via BLE.
      *
      * @param address The device address of the destination device.
      */
-    public void connect(@NonNull Activity activity, @NonNull final String address) {
+    void connectInternal(@NonNull Activity activity, @NonNull final String address) {
+        if (!shouldBeConnected) {
+            Log.i(LOG_TAG, "Call to connectInternal when shouldBeConnected is false, ignoring");
+            return;
+        }
+        statusChanged(R.string.status_connecting);
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Log.d(LOG_TAG,
             "Got Bluetooth adapter, looking for remote device with address " + address);
@@ -138,34 +124,23 @@ public class BLESender {
             return;
         }
         Log.d(LOG_TAG, "Found device with address " + address);
-        closeWithoutLogging();
+        closeCurrentBleConnection();
         bluetoothGatt = device.connectGatt(activity, false, new SaildataBluetoothGattCallback());
 
         Log.d(LOG_TAG, "Started to create a new GATT connection.");
     }
 
-    /**
-     * After using a given BLE device, the app must call this method to ensure resources are
-     * released properly.
-     */
-    public void close() {
-        closeWithoutLogging();
-        Log.i(LOG_TAG, "Done Disconnecting from bluetooth");
+    public boolean isConnected() {
+        return bluetoothGattCharacteristic != null;
     }
 
-    private void closeWithoutLogging() {
-        if (bluetoothGatt == null) {
-            return;
-        }
-        bluetoothGattCharacteristic = null;
-        bluetoothGatt.close();
-        bluetoothGatt = null;
-        statusChanged(R.string.status_off);
-    }
-
-    public void findService(List<BluetoothGattService> serviceList)
+    void findService(List<BluetoothGattService> serviceList)
     {
         Log.i(LOG_TAG, "Found " + serviceList.size() + " GATT Services");
+        if (!shouldBeConnected) {
+            Log.i(LOG_TAG, "Call to findService while shouldBeConnected is false, disconnecting");
+            closeCurrentBleConnection();
+        }
         for (BluetoothGattService service : serviceList)
         {
             if (service.getUuid().toString().equalsIgnoreCase(SERVICE_UUID.toString()))
@@ -202,41 +177,57 @@ public class BLESender {
         }
     }
 
-    private class BluetoothConnectThread extends Thread {
+    public boolean isConnectionAttemptedToIncompatibleDevice() {
+        return incompatibleDevice;
+    }
 
-        private final Activity activity;
+    /**
+     * Closes the current BLE connection and prohibits any further attempts to reconnect.
+     */
+    public void close() {
+        shouldBeConnected = false;
+        BLEConnectionWatchdog.close();
+        BLEConnectionWatchdog = null;
+        closeCurrentBleConnection();
+        Log.i(LOG_TAG, "Done Disconnecting from bluetooth");
+        statusChanged(R.string.status_off);
+    }
 
-        private final String address;
-
-        public BluetoothConnectThread(Activity activity, String address) {
-            this.activity =activity;
-            this.address = address;
+    /**
+     * Closes the current BLE connection.
+     * Reconnect attempts via the bluetoothConnectThread are not prohibited.
+     */
+    void closeCurrentBleConnection() {
+        if (bluetoothGatt == null) {
+            return;
         }
+        bluetoothGattCharacteristic = null;
+        bluetoothGatt.close();
+        bluetoothGatt = null;
+        statusChanged(R.string.status_disconnected);
+    }
 
-        public void run() {
-            statusChanged(R.string.status_connecting);
-            while(!Thread.currentThread().isInterrupted()) {
-                try {
-                    if (bluetoothGattCharacteristic != null) {
-                        return;
-                    }
-                    connect(activity, address);
-                    return;
-                }
-                catch (RuntimeException connectException) {
-                    close();
-                }
 
-                try  {
-                    Thread.sleep(CONNECT_SLEEP_TIME_MILLIS);
-                }
-                catch (InterruptedException e) {
-                     Thread.currentThread().interrupt();
-                }
-                catch(Exception ignored) {
-                }
-            }
+    public void sendLineIfConnected(String toSend) {
+        sendRawIfConnected(toSend + ";");
+    }
+
+    public void sendRawIfConnected(String strValue)
+    {
+        if (bluetoothGatt != null && bluetoothGattCharacteristic != null) {
+            bluetoothGattCharacteristic.setValue(strValue.getBytes());
+            bluetoothGatt.writeCharacteristic(bluetoothGattCharacteristic);
         }
+        else {
+            Log.d(LOG_TAG, "not connected, ignoring data " + strValue);
+        }
+    }
+
+    private void statusChanged(int statusTextResourceId) {
+        statusTextView.setText(String.format(
+                activity.getResources().getString(R.string.status_ble_tag),
+                activity.getResources().getString(statusTextResourceId)));
+
     }
 
     private final class SaildataBluetoothGattCallback extends BluetoothGattCallback {
@@ -257,18 +248,18 @@ public class BLESender {
                 else
                 {
                     Log.i(LOG_TAG, "Failed to start service discovery, disconnecting");
-                    closeWithoutLogging();
+                    closeCurrentBleConnection();
                     incompatibleDevice = true;
                 }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.i(LOG_TAG, "Disconnected from GATT Server");
-                closeWithoutLogging();
+                closeCurrentBleConnection();
             }
             else
             {
                 Log.i(LOG_TAG, "BLE status changed. ConnectionStatus=" + connectionStatus
                         + " NewStatus=" + newState);
-                closeWithoutLogging();
+                closeCurrentBleConnection();
                 incompatibleDevice = true;
             }
         }

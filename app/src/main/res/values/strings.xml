@@ -22,6 +22,7 @@
     <string name="status_gps_placeholder">GPS</string>
     <string name="status_gps_tag">GPS: %1$s</string>
     <string name="status_off">off</string>
+    <string name="status_disconnected">disconnected</string>
     <string name="status_ble_placeholder">BLE</string>
     <string name="status_ble_tag">BLE: %1$s</string>
     <string name="status_connecting">connecting</string>
