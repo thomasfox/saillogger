@@ -24,7 +24,7 @@ import com.github.thomasfox.saildata.R;
 import java.util.List;
 import java.util.UUID;
 
-public class BLESender {
+public class BleSender {
     private static final String LOG_TAG ="Saildata:BLE";
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 9561;
@@ -56,9 +56,9 @@ public class BLESender {
 
     private boolean shouldBeConnected = false;
 
-    BLEConnectionWatchdog BLEConnectionWatchdog;
+    BleConnectionWatchdog BleConnectionWatchdog;
 
-    public BLESender(@NonNull Activity activity, @NonNull TextView statusTextView) {
+    public BleSender(@NonNull Activity activity, @NonNull TextView statusTextView) {
         this.activity = activity;
         this.statusTextView = statusTextView;
 
@@ -87,7 +87,7 @@ public class BLESender {
     public void connect(@NonNull Activity activity) {
         shouldBeConnected = true;
 
-        if (BLEConnectionWatchdog != null) {
+        if (BleConnectionWatchdog != null) {
             Log.i(LOG_TAG, "Calling connect() while connecting is already in progress, ignoring");
             return;
         }
@@ -99,8 +99,8 @@ public class BLESender {
             return;
         }
         Log.i(LOG_TAG, "Creating a new connect thread...");
-        BLEConnectionWatchdog = new BLEConnectionWatchdog(this, activity, address);
-        BLEConnectionWatchdog.start();
+        BleConnectionWatchdog = new BleConnectionWatchdog(this, activity, address);
+        BleConnectionWatchdog.start();
     }
 
     /**
@@ -186,8 +186,8 @@ public class BLESender {
      */
     public void close() {
         shouldBeConnected = false;
-        BLEConnectionWatchdog.close();
-        BLEConnectionWatchdog = null;
+        BleConnectionWatchdog.close();
+        BleConnectionWatchdog = null;
         closeCurrentBleConnection();
         Log.i(LOG_TAG, "Done Disconnecting from bluetooth");
         statusChanged(R.string.status_off);

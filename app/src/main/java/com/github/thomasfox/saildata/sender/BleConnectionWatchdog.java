@@ -3,7 +3,7 @@ package com.github.thomasfox.saildata.sender;
 import android.app.Activity;
 import android.util.Log;
 
-class BLEConnectionWatchdog extends Thread {
+class BleConnectionWatchdog extends Thread {
 
     private static final String LOG_TAG ="Saildata:BLEConnThread";
 
@@ -13,7 +13,7 @@ class BLEConnectionWatchdog extends Thread {
 
     private static final long RECONNECT_INCOMPATIBLE_DEVICE_SLEEP_TIME_MILLIS = 10000L;
 
-    private final BLESender bleSender;
+    private final BleSender bleSender;
 
     private final Activity activity;
 
@@ -25,7 +25,7 @@ class BLEConnectionWatchdog extends Thread {
         shouldStop = true;
     }
 
-    public BLEConnectionWatchdog(BLESender bleSender, Activity activity, String address) {
+    public BleConnectionWatchdog(BleSender bleSender, Activity activity, String address) {
         this.bleSender = bleSender;
         this.activity = activity;
         this.address = address;

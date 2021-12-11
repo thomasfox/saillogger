@@ -13,7 +13,7 @@ import com.github.thomasfox.saildata.camera.CameraManager;
 import com.github.thomasfox.saildata.logger.DataLogger;
 import com.github.thomasfox.saildata.logger.Files;
 import com.github.thomasfox.saildata.screen.ScreenManager;
-import com.github.thomasfox.saildata.sender.BLESender;
+import com.github.thomasfox.saildata.sender.BleSender;
 
 class EnableLoggingClickListener implements View.OnClickListener {
 
@@ -33,7 +33,7 @@ class EnableLoggingClickListener implements View.OnClickListener {
 
     private DataLogger dataLogger;
 
-    private BLESender bluetoothSender;
+    private BleSender bluetoothSender;
 
     private CameraManager cameraManager;
 
@@ -71,7 +71,7 @@ class EnableLoggingClickListener implements View.OnClickListener {
     private void startLogging() {
         int trackFileNumber = Files.getTrackFileNumber(activity);
         dataLogger = new DataLogger(activity, locationTextView, trackFileNumber);
-        bluetoothSender = new BLESender(activity, bleStatusTextView);
+        bluetoothSender = new BleSender(activity, bleStatusTextView);
         locationListener = new LoggingLocationListener(
                 activity,
                 gpsStatusTextView,

@@ -15,7 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.github.thomasfox.saildata.logger.DataLogger;
-import com.github.thomasfox.saildata.sender.BLESender;
+import com.github.thomasfox.saildata.sender.BleSender;
 
 import java.util.Locale;
 
@@ -41,7 +41,7 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
 
     private final DataLogger dataLogger;
 
-    private final BLESender bluetoothSender;
+    private final BleSender bluetoothSender;
 
     private Location startLocation;
 
@@ -56,7 +56,7 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
             @NonNull TextView speedTextView,
             @NonNull TextView bearingTextView,
             @NonNull DataLogger dataLogger,
-            BLESender bluetoothSender) {
+            BleSender bluetoothSender) {
         this.activity = activity;
         this.statusTextView = statusTextView;
         this.locationTextView = locationTextView;
@@ -129,6 +129,7 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
         }
     }
 
+    @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {

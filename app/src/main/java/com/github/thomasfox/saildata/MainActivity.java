@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.thomasfox.saildata.screen.BrightnessListener;
 import com.github.thomasfox.saildata.screen.ScreenManager;
-import com.github.thomasfox.saildata.sender.BLESender;
+import com.github.thomasfox.saildata.sender.BleSender;
 
 
 public class MainActivity extends AppCompatActivity implements BrightnessListener {
@@ -125,13 +125,13 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
     {
         Activity activity;
         TextView statusTextView;
-        BLESender bluetoothSender;
+        BleSender bluetoothSender;
 
 
         public BluetoothTester(Activity activity, TextView statusTextView) {
             this.activity = activity;
             this.statusTextView = statusTextView;
-            bluetoothSender = new BLESender(activity, statusTextView);
+            bluetoothSender = new BleSender(activity, statusTextView);
         }
 
         @Override
