@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class BleSender {
+
     private static final String LOG_TAG ="Saildata:BLE";
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 9561;
@@ -190,7 +191,7 @@ public class BleSender {
         BleConnectionWatchdog = null;
         closeCurrentBleConnection();
         Log.i(LOG_TAG, "Done Disconnecting from bluetooth");
-        statusChanged(R.string.status_off);
+        statusChanged(R.string.status_stopped);
     }
 
     /**
@@ -224,10 +225,10 @@ public class BleSender {
     }
 
     private void statusChanged(int statusTextResourceId) {
-        statusTextView.setText(String.format(
-                activity.getResources().getString(R.string.status_ble_tag),
+        statusTextView.setText(
+            activity.getResources().getString(
+                R.string.status_ble_tag,
                 activity.getResources().getString(statusTextResourceId)));
-
     }
 
     private final class SaildataBluetoothGattCallback extends BluetoothGattCallback {

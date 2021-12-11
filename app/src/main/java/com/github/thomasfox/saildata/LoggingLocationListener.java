@@ -19,7 +19,7 @@ import com.github.thomasfox.saildata.sender.BleSender;
 
 import java.util.Locale;
 
-class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
+class LoggingLocationListener implements LocationListener {
 
     private static final double EARTH_RADIUS_IN_METERS = 6371000;
 
@@ -27,7 +27,7 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 2135;
 
-    private final TextView statusTextView;
+    private final TextView gpsStatusTextView;
 
     private final TextView locationTextView;
 
@@ -51,14 +51,14 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
 
     LoggingLocationListener(
             @NonNull AppCompatActivity activity,
-            @NonNull TextView statusTextView,
+            @NonNull TextView gpsStatusTextView,
             @NonNull TextView locationTextView,
             @NonNull TextView speedTextView,
             @NonNull TextView bearingTextView,
             @NonNull DataLogger dataLogger,
             BleSender bluetoothSender) {
         this.activity = activity;
-        this.statusTextView = statusTextView;
+        this.gpsStatusTextView = gpsStatusTextView;
         this.locationTextView = locationTextView;
         this.speedTextView = speedTextView;
         this.bearingTextView = bearingTextView;
@@ -83,13 +83,15 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
             startLocation = location;
         }
         if (location.hasAccuracy()) {
-            statusTextView.setText(activity.getResources().getString(
-                    R.string.info_gps_accuracy,
-                    location.getAccuracy() + "m"));
+            gpsStatusTextView.setText(
+                activity.getResources().getString(
+                    R.string.status_gps_tag,
+                    activity.getResources().getString(
+                        R.string.info_gps_accuracy,
+                        location.getAccuracy() + "m")));
         }
         else {
-            statusTextView.setText(activity.getResources().getString(
-                    R.string.info_gps_fix));
+            statusChanged(R.string.status_fix);
         }
         locationTextView.setText(getLocationText(location));
         speedTextView.setText(getSpeedText(location));
@@ -121,35 +123,18 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
                     LOCATION_POLLING_INTERVAL_MILLIS,
                     LOCATION_MIN_DISTANCE_METERS,
                    this);
-            statusTextView.setText(activity.getResources().getString(R.string.info_gps_wait_for_fix));
+            statusChanged(R.string.status_wait_for_fix);
         }
         else
         {
-            statusTextView.setText(activity.getResources().getString(R.string.err_gps_permission_denied));
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    registerLocationListener();
-                } else {
-                    statusTextView.setText(activity.getResources().getString(R.string.err_gps_permission_denied));
-                }
-            }
+            statusChanged(R.string.status_permission_denied);
         }
     }
 
     private void stopLocationListener()
     {
         locationManager.removeUpdates(this);
-        statusTextView.setText(activity.getResources().getString(R.string.info_gps_stopped));
+        statusChanged(R.string.status_stopped);
         locationTextView.setText(activity.getResources().getString(R.string.status_standby));
         speedTextView.setText(activity.getResources().getString(R.string.speed_no_value_text));
         bearingTextView.setText(activity.getResources().getString(R.string.bearing_no_value_text));
@@ -186,5 +171,12 @@ class LoggingLocationListener implements LocationListener, ActivityCompat.OnRequ
         String result = String.format(Locale.GERMAN, "%.0f°",
                 location.getBearing());
         return result;
+    }
+
+    private void statusChanged(int statusTextResourceId) {
+        gpsStatusTextView.setText(
+                activity.getResources().getString(R.string.status_gps_tag,
+                activity.getResources().getString(statusTextResourceId)));
+
     }
 }

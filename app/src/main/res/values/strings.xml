@@ -21,13 +21,16 @@
     <string name="status_standby">Standby</string>
     <string name="status_gps_placeholder">GPS</string>
     <string name="status_gps_tag">GPS: %1$s</string>
-    <string name="status_off">off</string>
+    <string name="status_stopped">stopped</string>
     <string name="status_disconnected">disconnected</string>
     <string name="status_ble_placeholder">BLE</string>
     <string name="status_ble_tag">BLE: %1$s</string>
     <string name="status_connecting">connecting</string>
     <string name="status_find_services">finding services</string>
     <string name="status_connected">connected</string>
+    <string name="status_permission_denied">permission denied</string>
+    <string name="status_wait_for_fix">wait for fix</string>
+    <string name="status_fix">fix</string>
 
     <string name="button_start_logging">Start logging</string>
     <string name="button_stop_logging">Stop logging</string>
@@ -39,11 +42,7 @@
 
     <string name="err_write_track_data">Could not write track data to file: %1$s</string>
     <string name="err_close_track_data_file">Could not close track data file: %1$s</string>
-    <string name="err_gps_permission_denied">permission denied</string>
-    <string name="info_gps_wait_for_fix">wait for fix</string>
-    <string name="info_gps_fix">fix</string>
     <string name="info_gps_accuracy">accuracy %1$s</string>
-    <string name="info_gps_stopped">stopped</string>
     <string name="info_file_written">Wrote track data to file: %1$s</string>
 
     <string name="scan_bluetooth_le_devices">Scan Bluetooth LE Devices</string>
