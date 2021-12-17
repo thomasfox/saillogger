@@ -218,6 +218,13 @@ public class BleSender {
         if (bluetoothGatt != null && bluetoothGattCharacteristic != null) {
             bluetoothGattCharacteristic.setValue(strValue.getBytes());
             bluetoothGatt.writeCharacteristic(bluetoothGattCharacteristic);
+            // it seems that the display needs a little time after sending
+            // before it can receive the next data packet
+            try {
+                Thread.sleep(1L);
+            } catch (InterruptedException e) {
+                // ignore
+            }
         }
         else {
             Log.d(LOG_TAG, "not connected, ignoring data " + strValue);
