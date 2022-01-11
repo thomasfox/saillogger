@@ -17,26 +17,25 @@ public class BluetoothDeviceList extends BaseAdapter {
 
     private static final String LOG_TAG ="Saildata:BLDeviceList";
 
-    private ArrayList<DeviceData> devices = new ArrayList<>();
+    private ArrayList<BluetoothDeviceData> devices = new ArrayList<>();
 
     private LayoutInflater layoutInflater;
 
     private boolean scanFailed = false;
 
-    public BluetoothDeviceList(
-            @NonNull LayoutInflater layoutInflater) {
+    public BluetoothDeviceList(@NonNull LayoutInflater layoutInflater) {
         this.layoutInflater = layoutInflater;
     }
 
     public void addDevice(BluetoothDevice device) {
-        DeviceData toAdd = new DeviceData(device);
+        BluetoothDeviceData toAdd = new BluetoothDeviceData(device);
         if (!devices.contains(toAdd)) {
             devices.add(toAdd);
         }
         notifyDataSetChanged();
     }
 
-    public DeviceData getDevice(int position) {
+    public BluetoothDeviceData getDevice(int position) {
         return devices.get(position);
     }
 
@@ -79,10 +78,10 @@ public class BluetoothDeviceList extends BaseAdapter {
         } else {
             view = viewToReuse;
         }
-        TextView deviceAddressView = (TextView) view.findViewById(R.id.bluetooth_device_address);
-        TextView deviceNameView = (TextView) view.findViewById(R.id.bluetooth_device_name);
+        TextView deviceAddressView = view.findViewById(R.id.bluetooth_device_address);
+        TextView deviceNameView = view.findViewById(R.id.bluetooth_device_name);
 
-        DeviceData device = devices.get(position);
+        BluetoothDeviceData device = devices.get(position);
         final String deviceName = device.getName();
         if (deviceName != null && deviceName.length() > 0) {
             deviceNameView.setText(deviceName);

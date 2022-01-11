@@ -12,13 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
 import com.github.thomasfox.saildata.sender.BleScanCallback;
 import com.github.thomasfox.saildata.sender.BleScannerWithStatusView;
 import com.github.thomasfox.saildata.sender.BluetoothDeviceList;
-import com.github.thomasfox.saildata.sender.DeviceData;
+import com.github.thomasfox.saildata.sender.BluetoothDeviceData;
 
 public class BluetoothLeScanActivity extends AppCompatActivity
         implements BleScanCallback, AdapterView.OnItemClickListener {
@@ -87,7 +86,7 @@ public class BluetoothLeScanActivity extends AppCompatActivity
     @Override
     public void onItemClick(AdapterView<?> listView, View itemView, int position, long id) {
         bleScanner.stopScan();
-        DeviceData device = bluetoothDeviceList.getDevice(position);
+        BluetoothDeviceData device = bluetoothDeviceList.getDevice(position);
         PreferenceManager.getDefaultSharedPreferences(this).edit()
                 .putString("bleDeviceAddress", device.getMacAddress())
                 .commit();
