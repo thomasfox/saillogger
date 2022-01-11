@@ -98,7 +98,8 @@ class LoggingLocationListener implements LocationListener {
         bearingTextView.setText(getBearingText(location));
         dataLogger.setLocation(location);
         if (bluetoothSender != null) {
-            bluetoothSender.sendLineIfConnected(getSpeedText(location));
+            bluetoothSender.sendSpeedIfConnected(getSpeedText(location));
+            bluetoothSender.sendBearingStringIfConnected(getBearingText(location));
         }
     }
 

@@ -34,6 +34,12 @@ public class BleSender {
 
     private static final int MY_PERMISSIONS_REQUEST_BLUETOOTH_ADMIN = 377;
 
+    private static final String SPEED_FIELD_PREFIX = "f1:";
+
+    private static final String BEARING_STRING_FIELD_PREFIX = "f2:";
+
+    private static final String BEARING_BAR_FIELD_PREFIX = "f3:";
+
     /** The uuid of the service used to send data to the BLE device. */
     public final static UUID SERVICE_UUID =
             UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
@@ -208,13 +214,23 @@ public class BleSender {
         statusChanged(R.string.status_disconnected);
     }
 
+    public void sendSpeedIfConnected(String toSend) {
+        sendRawIfConnected(SPEED_FIELD_PREFIX + toSend + ";");
+    }
+
+    public void sendBearingStringIfConnected(String toSend) {
+        sendRawIfConnected(BEARING_STRING_FIELD_PREFIX + toSend + ";");
+    }
+
+    public void sendBearingBarIfConnected(String toSend) {
+        sendRawIfConnected(BEARING_BAR_FIELD_PREFIX + toSend + ";");
+    }
 
     public void sendLineIfConnected(String toSend) {
         sendRawIfConnected(toSend + ";");
     }
 
-    public void sendRawIfConnected(String strValue)
-    {
+    public void sendRawIfConnected(String strValue) {
         if (bluetoothGatt != null && bluetoothGattCharacteristic != null) {
             bluetoothGattCharacteristic.setValue(strValue.getBytes());
             bluetoothGatt.writeCharacteristic(bluetoothGattCharacteristic);
