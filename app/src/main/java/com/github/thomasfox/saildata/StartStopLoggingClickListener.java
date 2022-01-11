@@ -9,13 +9,18 @@ import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import com.github.thomasfox.saildata.LoggingSensorListener;
+import com.github.thomasfox.saildata.MainActivity;
+import com.github.thomasfox.saildata.SettingsActivity;
+import com.github.thomasfox.saildata.StopLoggingDialogFragment;
 import com.github.thomasfox.saildata.camera.CameraManager;
+import com.github.thomasfox.saildata.location.LocationListenerHub;
 import com.github.thomasfox.saildata.logger.DataLogger;
 import com.github.thomasfox.saildata.logger.Files;
 import com.github.thomasfox.saildata.screen.ScreenManager;
 import com.github.thomasfox.saildata.sender.BleSender;
 
-class EnableLoggingClickListener implements View.OnClickListener {
+public class StartStopLoggingClickListener implements View.OnClickListener {
 
     private final TextView locationTextView;
 
@@ -23,11 +28,11 @@ class EnableLoggingClickListener implements View.OnClickListener {
 
     private final TextView bleStatusTextView;
 
-    private TextView speedTextView;
+    private final TextView speedTextView;
 
-    private TextView bearingTextView;
+    private final TextView bearingTextView;
 
-    private LoggingLocationListener locationListener;
+    private LocationListenerHub locationListener;
 
     private LoggingSensorListener compassListener;
 
@@ -41,7 +46,7 @@ class EnableLoggingClickListener implements View.OnClickListener {
 
     private final ScreenManager screenManager;
 
-    EnableLoggingClickListener(
+    public StartStopLoggingClickListener(
             TextView locationTextView,
             TextView gpsStatusTextView,
             TextView bleStatusTextView,
@@ -72,7 +77,7 @@ class EnableLoggingClickListener implements View.OnClickListener {
         int trackFileNumber = Files.getTrackFileNumber(activity);
         dataLogger = new DataLogger(activity, locationTextView, trackFileNumber);
         bluetoothSender = new BleSender(activity, bleStatusTextView);
-        locationListener = new LoggingLocationListener(
+        locationListener = new LocationListenerHub(
                 activity,
                 gpsStatusTextView,
                 locationTextView,
@@ -93,7 +98,7 @@ class EnableLoggingClickListener implements View.OnClickListener {
          }
     }
 
-    void stopLogging() {
+    public void stopLogging() {
         locationListener.close();
         locationListener = null;
         bluetoothSender.close();
@@ -108,6 +113,5 @@ class EnableLoggingClickListener implements View.OnClickListener {
         }
         screenManager.restoreSystemBrightness();
         screenManager.allowScreenOff();
-
     }
 }

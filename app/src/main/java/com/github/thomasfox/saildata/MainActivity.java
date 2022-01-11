@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
 
     private ScreenManager screenManager;
 
-    private EnableLoggingClickListener enableLoggingClickListener;
+    private StartStopLoggingClickListener locationClickListener;
 
     private ToggleButton enableLoggingButton;
 
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         screenManager = new ScreenManager(this);
         screenManager.registerBrightnessListener(this);
 
-        enableLoggingClickListener = new EnableLoggingClickListener(
+        locationClickListener = new StartStopLoggingClickListener(
                 locationTextView,
                 gpsStatusTextView,
                 bleStatusTextView,
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
                 bearingTextView,
                 this);
         enableLoggingButton = findViewById(R.id.enableLoggingButton);
-        enableLoggingButton.setOnClickListener(enableLoggingClickListener);
+        enableLoggingButton.setOnClickListener(locationClickListener);
 
         ToggleButton dimScreenButton = findViewById(R.id.dimScreenButton);
         dimScreenButton.setOnClickListener(new DimScreenClickListener(this));
@@ -109,8 +109,8 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         }
     }
 
-    public EnableLoggingClickListener getEnableLoggingClickListener() {
-        return enableLoggingClickListener;
+    public StartStopLoggingClickListener getLocationClickListener() {
+        return locationClickListener;
     }
 
     public ToggleButton getEnableLoggingButton() {

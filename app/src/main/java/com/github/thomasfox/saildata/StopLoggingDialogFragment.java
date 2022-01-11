@@ -12,16 +12,16 @@ public class StopLoggingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.message_stop_logging)
-                .setPositiveButton(R.string.button_stop_logging, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        ((MainActivity) getActivity()).getEnableLoggingClickListener().stopLogging();
-                    }
-                })
-                .setNegativeButton(R.string.button_continue_logging, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                ((MainActivity) getActivity()).getEnableLoggingButton().setChecked(true);
-            }
-        });
+                .setPositiveButton(
+                        R.string.button_stop_logging,
+                        (dialog, id) -> ((MainActivity) getActivity())
+                                .getLocationClickListener()
+                                .stopLogging())
+                .setNegativeButton(
+                        R.string.button_continue_logging,
+                        (dialog, id) -> ((MainActivity) getActivity())
+                                .getEnableLoggingButton()
+                                .setChecked(true));
         return builder.create();
     }
 }

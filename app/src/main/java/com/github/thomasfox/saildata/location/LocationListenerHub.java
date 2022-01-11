@@ -1,4 +1,4 @@
-package com.github.thomasfox.saildata;
+package com.github.thomasfox.saildata.location;
 
 import android.Manifest;
 import android.content.Context;
@@ -14,12 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.github.thomasfox.saildata.R;
 import com.github.thomasfox.saildata.logger.DataLogger;
 import com.github.thomasfox.saildata.sender.BleSender;
 
 import java.util.Locale;
 
-class LoggingLocationListener implements LocationListener {
+public class LocationListenerHub implements LocationListener {
 
     private static final double EARTH_RADIUS_IN_METERS = 6371000;
 
@@ -49,7 +50,7 @@ class LoggingLocationListener implements LocationListener {
 
     private static final int LOCATION_MIN_DISTANCE_METERS = 1;
 
-    LoggingLocationListener(
+    public LocationListenerHub(
             @NonNull AppCompatActivity activity,
             @NonNull TextView gpsStatusTextView,
             @NonNull TextView locationTextView,

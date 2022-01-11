@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.thomasfox.saildata.logger.DataLogger;
 
-class LoggingSensorListener implements SensorEventListener {
+public class LoggingSensorListener implements SensorEventListener {
 
     private static final String TAG = "saildatalogger";
 
@@ -22,7 +22,7 @@ class LoggingSensorListener implements SensorEventListener {
 
     private static final int POLLING_INTERVAL_MICROS = 500000;
 
-    LoggingSensorListener(@NonNull AppCompatActivity activity, @NonNull DataLogger dataLogger) {
+    public LoggingSensorListener(@NonNull AppCompatActivity activity, @NonNull DataLogger dataLogger) {
         this.dataLogger = dataLogger;
         sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         registerSensorListener();
