@@ -9,12 +9,10 @@ import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
-import com.github.thomasfox.saildata.LoggingSensorListener;
-import com.github.thomasfox.saildata.MainActivity;
-import com.github.thomasfox.saildata.SettingsActivity;
-import com.github.thomasfox.saildata.StopLoggingDialogFragment;
 import com.github.thomasfox.saildata.camera.CameraManager;
+import com.github.thomasfox.saildata.location.BluetoothDisplay;
 import com.github.thomasfox.saildata.location.LocationListenerHub;
+import com.github.thomasfox.saildata.location.LocationScreenDisplay;
 import com.github.thomasfox.saildata.logger.DataLogger;
 import com.github.thomasfox.saildata.logger.Files;
 import com.github.thomasfox.saildata.screen.ScreenManager;
@@ -38,7 +36,9 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
 
     private DataLogger dataLogger;
 
-    private BleSender bluetoothSender;
+    private LocationScreenDisplay locationScreenDisplay;
+
+    private BluetoothDisplay bluetoothDisplay;
 
     private CameraManager cameraManager;
 
@@ -76,15 +76,19 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
     private void startLogging() {
         int trackFileNumber = Files.getTrackFileNumber(activity);
         dataLogger = new DataLogger(activity, locationTextView, trackFileNumber);
-        bluetoothSender = new BleSender(activity, bleStatusTextView);
-        locationListener = new LocationListenerHub(
+        BleSender bluetoothSender = new BleSender(activity, bleStatusTextView);
+        bluetoothDisplay = new BluetoothDisplay(activity, bluetoothSender);
+        locationScreenDisplay = new LocationScreenDisplay(
                 activity,
                 gpsStatusTextView,
                 locationTextView,
                 speedTextView,
-                bearingTextView,
+                bearingTextView);
+        locationListener = new LocationListenerHub(
+                activity,
                 dataLogger,
-                bluetoothSender);
+                locationScreenDisplay,
+                bluetoothDisplay);
         compassListener = new LoggingSensorListener(activity, dataLogger);
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         if (defaultSharedPreferences.getBoolean(SettingsActivity.SETTINGS_KEY_RECORD_VIDEO, false)) {
@@ -101,12 +105,14 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
     public void stopLogging() {
         locationListener.close();
         locationListener = null;
-        bluetoothSender.close();
-        bluetoothSender = null;
         compassListener.close();
         compassListener = null;
         dataLogger.close();
         dataLogger = null;
+        locationScreenDisplay.close();
+        locationScreenDisplay = null;
+        bluetoothDisplay.close();
+        bluetoothDisplay = null;
         if (cameraManager != null) {
             cameraManager.close();
             cameraManager = null;
