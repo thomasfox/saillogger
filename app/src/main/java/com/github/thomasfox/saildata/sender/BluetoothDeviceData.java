@@ -4,11 +4,15 @@ import android.bluetooth.BluetoothDevice;
 
 import java.util.Objects;
 
-public class DeviceData {
+/**
+ * Contains information about one discovered bluetooth device.
+ */
+public class BluetoothDeviceData {
+
     private String name;
     private String macAddress;
 
-    public DeviceData(BluetoothDevice bluetoothDevice) {
+    public BluetoothDeviceData(BluetoothDevice bluetoothDevice) {
         this.name = bluetoothDevice.getName();
         this.macAddress = bluetoothDevice.getAddress();
     }
@@ -25,7 +29,7 @@ public class DeviceData {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DeviceData that = (DeviceData) o;
+        BluetoothDeviceData that = (BluetoothDeviceData) o;
         return Objects.equals(name, that.name) &&
                 Objects.equals(macAddress, that.macAddress);
     }
