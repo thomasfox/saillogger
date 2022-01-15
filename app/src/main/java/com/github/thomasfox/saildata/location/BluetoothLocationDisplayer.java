@@ -37,7 +37,6 @@ public class BluetoothLocationDisplayer {
     public void close() {
         bluetoothSender.sendSpeedIfConnected(activity.getResources().getString(R.string.speed_no_value_text));
         bluetoothSender.sendBearingStringIfConnected(activity.getResources().getString(R.string.bearing_no_value_text));
-        bluetoothSender.close();
     }
 
     private String getSpeedText(Location location) {

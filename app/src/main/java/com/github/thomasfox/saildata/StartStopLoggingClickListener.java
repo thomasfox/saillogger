@@ -18,6 +18,10 @@ import com.github.thomasfox.saildata.logger.Files;
 import com.github.thomasfox.saildata.screen.ScreenManager;
 import com.github.thomasfox.saildata.sender.BleSender;
 
+/**
+ * Handles "Start logging" ond "Stop logging" events from the user.
+ * Handles the lifecycle of the components which are needed while logging is active.
+ */
 public class StartStopLoggingClickListener implements View.OnClickListener {
 
     private final TextView locationTextView;
@@ -39,6 +43,8 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
     private ScreenLocationDisplayer locationScreenDisplay;
 
     private BluetoothLocationDisplayer bluetoothLocationDisplayer;
+
+    private BleSender bleSender;
 
     private CameraManager cameraManager;
 
@@ -76,8 +82,8 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
     private void startLogging() {
         int trackFileNumber = Files.getTrackFileNumber(activity);
         dataLogger = new DataLogger(activity, locationTextView, trackFileNumber);
-        BleSender bluetoothSender = new BleSender(activity, bleStatusTextView);
-        bluetoothLocationDisplayer = new BluetoothLocationDisplayer(activity, bluetoothSender);
+        bleSender = new BleSender(activity, bleStatusTextView);
+        bluetoothLocationDisplayer = new BluetoothLocationDisplayer(activity, bleSender);
         locationScreenDisplay = new ScreenLocationDisplayer(
                 activity,
                 gpsStatusTextView,
@@ -113,6 +119,8 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
         locationScreenDisplay = null;
         bluetoothLocationDisplayer.close();
         bluetoothLocationDisplayer = null;
+        bleSender.close();
+        bleSender = null;
         if (cameraManager != null) {
             cameraManager.close();
             cameraManager = null;

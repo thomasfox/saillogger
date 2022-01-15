@@ -45,7 +45,6 @@ public class ScreenLocationDisplayer {
         this.bearingTextView = bearingTextView;
     }
 
-
     public void onLocationChanged(Location location) {
         if (startLocation == null) {
             startLocation = location;

@@ -16,9 +16,9 @@ import androidx.core.content.ContextCompat;
 import com.github.thomasfox.saildata.logger.DataLogger;
 
 /**
- * Passes location information from the android system to the places where location information
- * is needed in the application. Handles the android permissions necessary to access the location
- * in the android system.
+ * Requests location information from the android system and passes the information
+ * to the places where location information is needed in the application.
+ * Handles the android permissions necessary to access the location in the android system.
  */
 public class LocationListenerHub implements LocationListener {
 
