@@ -3,7 +3,6 @@ package com.github.thomasfox.saildata;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 public class StopLoggingDialogFragment extends DialogFragment {
@@ -15,7 +14,7 @@ public class StopLoggingDialogFragment extends DialogFragment {
                 .setPositiveButton(
                         R.string.button_stop_logging,
                         (dialog, id) -> ((MainActivity) getActivity())
-                                .getLocationClickListener()
+                                .getStartStopLoggingClickListener()
                                 .stopLogging())
                 .setNegativeButton(
                         R.string.button_continue_logging,
