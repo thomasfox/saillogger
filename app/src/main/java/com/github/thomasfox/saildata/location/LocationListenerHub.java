@@ -14,13 +14,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.github.thomasfox.saildata.logger.DataLogger;
-import com.github.thomasfox.saildata.sender.BleSender;
 
-import java.util.Locale;
-
+/**
+ * Passes location information from the android system to the places where location information
+ * is needed in the application. Handles the android permissions necessary to access the location
+ * in the android system.
+ */
 public class LocationListenerHub implements LocationListener {
-
-    private static final float METERS_PER_SECOND_IN_KNOTS = 1.94384f;
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 2135;
 
@@ -30,9 +30,9 @@ public class LocationListenerHub implements LocationListener {
 
     private final DataLogger dataLogger;
 
-    private BluetoothDisplay bluetoothDisplay;
+    private final BluetoothLocationDisplayer bluetoothLocationDisplayer;
 
-    private final LocationScreenDisplay locationScreenDisplay;
+    private final ScreenLocationDisplayer screenLocationDisplayer;
 
     private static final int LOCATION_POLLING_INTERVAL_MILLIS = 250;
 
@@ -41,12 +41,12 @@ public class LocationListenerHub implements LocationListener {
     public LocationListenerHub(
             @NonNull AppCompatActivity activity,
             @NonNull DataLogger dataLogger,
-            @NonNull LocationScreenDisplay locationScreenDisplay,
-            @NonNull BluetoothDisplay bluetoothDisplay) {
+            @NonNull ScreenLocationDisplayer screenLocationDisplayer,
+            @NonNull BluetoothLocationDisplayer bluetoothLocationDisplayer) {
         this.activity = activity;
-        this.locationScreenDisplay = locationScreenDisplay;
+        this.screenLocationDisplayer = screenLocationDisplayer;
         this.dataLogger = dataLogger;
-        this.bluetoothDisplay = bluetoothDisplay;
+        this.bluetoothLocationDisplayer = bluetoothLocationDisplayer;
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
@@ -63,8 +63,8 @@ public class LocationListenerHub implements LocationListener {
 
     public void onLocationChanged(Location location) {
         dataLogger.setLocation(location);
-        locationScreenDisplay.onLocationChanged(location);
-        bluetoothDisplay.onLocationChanged(location);
+        screenLocationDisplayer.onLocationChanged(location);
+        bluetoothLocationDisplayer.onLocationChanged(location);
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -88,11 +88,11 @@ public class LocationListenerHub implements LocationListener {
                     LOCATION_POLLING_INTERVAL_MILLIS,
                     LOCATION_MIN_DISTANCE_METERS,
                    this);
-            locationScreenDisplay.displayWaitForFix();
+            screenLocationDisplayer.displayWaitForFix();
         }
         else
         {
-            locationScreenDisplay.displayPermissionDenied();
+            screenLocationDisplayer.displayPermissionDenied();
         }
     }
 

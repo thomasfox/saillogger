@@ -13,7 +13,12 @@ import com.github.thomasfox.saildata.R;
 
 import java.util.Locale;
 
-public class LocationScreenDisplay {
+/**
+ * Displays location information on the device's screen by filling the location, speed
+ * and bearing fields on the android device's screen.
+ * Also fills the gps status field on the screen with the current status.
+ */
+public class ScreenLocationDisplayer {
 
     private final AppCompatActivity activity;
 
@@ -27,7 +32,7 @@ public class LocationScreenDisplay {
 
     private Location startLocation;
 
-    public LocationScreenDisplay(
+    public ScreenLocationDisplayer(
             @NonNull AppCompatActivity activity,
             @NonNull TextView gpsStatusTextView,
             @NonNull TextView locationTextView,

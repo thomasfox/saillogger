@@ -12,13 +12,17 @@ import com.github.thomasfox.saildata.sender.BleSender;
 
 import java.util.Locale;
 
-public class BluetoothDisplay {
+/**
+ * Displays location information on a connected bluetooth display by sending the current speed,
+ * and direction to the connected BLE device.
+ */
+public class BluetoothLocationDisplayer {
 
     private final AppCompatActivity activity;
 
     private final BleSender bluetoothSender;
 
-    public BluetoothDisplay(
+    public BluetoothLocationDisplayer(
             @NonNull AppCompatActivity activity,
             @NonNull BleSender bluetoothSender) {
         this.activity = activity;
