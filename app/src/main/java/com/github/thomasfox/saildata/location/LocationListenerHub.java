@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.github.thomasfox.saildata.analyzer.TackDirectionChangeAnalyzer;
 import com.github.thomasfox.saildata.logger.DataLogger;
 
 /**
@@ -34,6 +35,8 @@ public class LocationListenerHub implements LocationListener {
 
     private final ScreenLocationDisplayer screenLocationDisplayer;
 
+    private final TackDirectionChangeAnalyzer tackDirectionChangeAnalyzer;
+
     private static final int LOCATION_POLLING_INTERVAL_MILLIS = 250;
 
     private static final int LOCATION_MIN_DISTANCE_METERS = 1;
@@ -42,11 +45,14 @@ public class LocationListenerHub implements LocationListener {
             @NonNull AppCompatActivity activity,
             @NonNull DataLogger dataLogger,
             @NonNull ScreenLocationDisplayer screenLocationDisplayer,
-            @NonNull BluetoothLocationDisplayer bluetoothLocationDisplayer) {
+            @NonNull BluetoothLocationDisplayer bluetoothLocationDisplayer,
+            @NonNull TackDirectionChangeAnalyzer tackDirectionChangeAnalyzer) {
         this.activity = activity;
         this.screenLocationDisplayer = screenLocationDisplayer;
         this.dataLogger = dataLogger;
         this.bluetoothLocationDisplayer = bluetoothLocationDisplayer;
+        this.tackDirectionChangeAnalyzer = tackDirectionChangeAnalyzer;
+
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
@@ -62,6 +68,7 @@ public class LocationListenerHub implements LocationListener {
     }
 
     public void onLocationChanged(Location location) {
+        tackDirectionChangeAnalyzer.onLocationChanged(location);
         dataLogger.setLocation(location);
         screenLocationDisplayer.onLocationChanged(location);
         bluetoothLocationDisplayer.onLocationChanged(location);

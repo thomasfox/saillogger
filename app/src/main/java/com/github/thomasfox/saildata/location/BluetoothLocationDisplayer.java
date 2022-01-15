@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.thomasfox.saildata.R;
+import com.github.thomasfox.saildata.analyzer.TackDirectionChangeAnalyzer;
 import com.github.thomasfox.saildata.sender.BleSender;
 
 import java.util.Locale;
@@ -22,21 +23,27 @@ public class BluetoothLocationDisplayer {
 
     private final BleSender bluetoothSender;
 
+    private final TackDirectionChangeAnalyzer tackDirectionChangeAnalyzer;
+
     public BluetoothLocationDisplayer(
             @NonNull AppCompatActivity activity,
-            @NonNull BleSender bluetoothSender) {
+            @NonNull BleSender bluetoothSender,
+            @NonNull TackDirectionChangeAnalyzer tackDirectionChangeAnalyzer) {
         this.activity = activity;
         this.bluetoothSender = bluetoothSender;
+        this.tackDirectionChangeAnalyzer = tackDirectionChangeAnalyzer;
     }
 
     public void onLocationChanged(Location location) {
         bluetoothSender.sendSpeedIfConnected(getSpeedText(location));
         bluetoothSender.sendBearingStringIfConnected(getBearingText(location));
+        bluetoothSender.sendBearingBarIfConnected(getBearingBarText());
     }
 
     public void close() {
         bluetoothSender.sendSpeedIfConnected(activity.getResources().getString(R.string.speed_no_value_text));
         bluetoothSender.sendBearingStringIfConnected(activity.getResources().getString(R.string.bearing_no_value_text));
+        bluetoothSender.sendBearingBarIfConnected("0");
     }
 
     private String getSpeedText(Location location) {
@@ -47,5 +54,12 @@ public class BluetoothLocationDisplayer {
     private String getBearingText(Location location) {
         return String.format(Locale.GERMAN, "%.0f°",
                 location.getBearing());
+    }
+
+    private String getBearingBarText() {
+        // Bearing bar values are from -100 to 100.
+        // We map that to -25 degrees to +25 degrees off the current tack.
+        return String.format(Locale.GERMAN, "%.0f°",
+                tackDirectionChangeAnalyzer.getDirectionRelativeToTackDirection() * 4);
     }
 }

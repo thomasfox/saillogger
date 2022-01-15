@@ -9,6 +9,7 @@ import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import com.github.thomasfox.saildata.analyzer.TackDirectionChangeAnalyzer;
 import com.github.thomasfox.saildata.camera.CameraManager;
 import com.github.thomasfox.saildata.location.BluetoothLocationDisplayer;
 import com.github.thomasfox.saildata.location.LocationListenerHub;
@@ -46,6 +47,8 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
 
     private BleSender bleSender;
 
+    private TackDirectionChangeAnalyzer tackDirectionChangeAnalyzer;
+
     private CameraManager cameraManager;
 
     private final AppCompatActivity activity;
@@ -82,8 +85,12 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
     private void startLogging() {
         int trackFileNumber = Files.getTrackFileNumber(activity);
         dataLogger = new DataLogger(activity, locationTextView, trackFileNumber);
+        tackDirectionChangeAnalyzer = new TackDirectionChangeAnalyzer();
         bleSender = new BleSender(activity, bleStatusTextView);
-        bluetoothLocationDisplayer = new BluetoothLocationDisplayer(activity, bleSender);
+        bluetoothLocationDisplayer = new BluetoothLocationDisplayer(
+                activity,
+                bleSender,
+                tackDirectionChangeAnalyzer);
         locationScreenDisplay = new ScreenLocationDisplayer(
                 activity,
                 gpsStatusTextView,
@@ -94,7 +101,8 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
                 activity,
                 dataLogger,
                 locationScreenDisplay,
-                bluetoothLocationDisplayer);
+                bluetoothLocationDisplayer,
+                tackDirectionChangeAnalyzer);
         compassListener = new LoggingSensorListener(activity, dataLogger);
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         if (defaultSharedPreferences.getBoolean(SettingsActivity.SETTINGS_KEY_RECORD_VIDEO, false)) {
@@ -121,6 +129,7 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
         bluetoothLocationDisplayer = null;
         bleSender.close();
         bleSender = null;
+        tackDirectionChangeAnalyzer = null;
         if (cameraManager != null) {
             cameraManager.close();
             cameraManager = null;

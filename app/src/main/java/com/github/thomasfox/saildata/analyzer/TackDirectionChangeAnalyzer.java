@@ -2,6 +2,10 @@ package com.github.thomasfox.saildata.analyzer;
 
 import android.location.Location;
 
+/**
+ * Computes the difference between the current direction and the average direction
+ * in the current tack.
+ */
 public class TackDirectionChangeAnalyzer {
 
     private static final double OFF_TACK_BEARING_THRESHOLD = 45;
