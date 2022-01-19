@@ -215,14 +215,23 @@ public class BleSender {
     }
 
     public void sendSpeedIfConnected(String toSend) {
+        if (toSend == null) {
+            return;
+        }
         sendRawIfConnected(SPEED_FIELD_PREFIX + toSend + ";");
     }
 
     public void sendBearingStringIfConnected(String toSend) {
+        if (toSend == null) {
+            return;
+        }
         sendRawIfConnected(BEARING_STRING_FIELD_PREFIX + toSend + ";");
     }
 
     public void sendBearingBarIfConnected(String toSend) {
+        if (toSend == null) {
+            return;
+        }
         sendRawIfConnected(BEARING_BAR_FIELD_PREFIX + toSend + ";");
     }
 
