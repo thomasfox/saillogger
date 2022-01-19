@@ -59,7 +59,12 @@ public class BluetoothLocationDisplayer {
     private String getBearingBarText() {
         // Bearing bar values are from -100 to 100.
         // We map that to -25 degrees to +25 degrees off the current tack.
+        Float directionRelativeToTackDirection
+                = tackDirectionChangeAnalyzer.getDirectionRelativeToTackDirection();
+        if (directionRelativeToTackDirection == null) {
+            return null;
+        }
         return String.format(Locale.GERMAN, "%.0f°",
-                tackDirectionChangeAnalyzer.getDirectionRelativeToTackDirection() * 4);
+                directionRelativeToTackDirection * 4);
     }
 }

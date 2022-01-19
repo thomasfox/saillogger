@@ -23,9 +23,6 @@ public class TackDirectionChangeAnalyzer {
     public void onLocationChanged(Location location) {
         if (tackStartLocation == null) {
             tackStartLocation = location;
-            return;
-        }
-        if (lastLocationInTack == null) {
             lastLocationInTack = location;
             return;
         }
@@ -47,7 +44,7 @@ public class TackDirectionChangeAnalyzer {
             offTackCounter++;
         }
         if (offTackCounter >= OFF_TACK_COUNTS_STARTS_NEW) {
-            lastLocationInTack = null;
+            tackStartLocation = location;
             offTackCounter = 0;
             directionRelativeToTackDirection = null;
         }
