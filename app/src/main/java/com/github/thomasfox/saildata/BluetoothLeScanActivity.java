@@ -28,8 +28,6 @@ public class BluetoothLeScanActivity extends AppCompatActivity
 
     private BleScannerWithStatusView bleScanner;
 
-    private TextView messageView;
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetoothlescan);
@@ -38,7 +36,7 @@ public class BluetoothLeScanActivity extends AppCompatActivity
             Toast.makeText(this, R.string.bluetooth_le_not_supported, Toast.LENGTH_SHORT).show();
             finish();
         }
-        messageView = findViewById(R.id.scanBluetoothDeviceMessage);
+        TextView messageView = findViewById(R.id.scanBluetoothDeviceMessage);
         bluetoothDeviceList = new BluetoothDeviceList(this.getLayoutInflater());
         bleScanner = new BleScannerWithStatusView(messageView, this);
 
