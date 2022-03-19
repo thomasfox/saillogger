@@ -63,7 +63,7 @@ public class BleSender {
 
     private boolean shouldBeConnected = false;
 
-    BleConnectionWatchdog BleConnectionWatchdog;
+    BleConnectionWatchdog bleConnectionWatchdog;
 
     public BleSender(@NonNull Activity activity, @NonNull TextView statusTextView) {
         this.activity = activity;
@@ -92,12 +92,12 @@ public class BleSender {
     }
 
     public void connect(@NonNull Activity activity) {
-        shouldBeConnected = true;
 
-        if (BleConnectionWatchdog != null) {
+        if (shouldBeConnected) {
             Log.i(LOG_TAG, "Calling connect() while connecting is already in progress, ignoring");
             return;
         }
+        shouldBeConnected = true;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         String address = prefs.getString("bleDeviceAddress", null);
@@ -106,8 +106,8 @@ public class BleSender {
             return;
         }
         Log.i(LOG_TAG, "Creating a new connect thread...");
-        BleConnectionWatchdog = new BleConnectionWatchdog(this, activity, address);
-        BleConnectionWatchdog.start();
+        bleConnectionWatchdog = new BleConnectionWatchdog(this, activity, address);
+        bleConnectionWatchdog.start();
     }
 
     /**
@@ -193,11 +193,17 @@ public class BleSender {
      */
     public void close() {
         shouldBeConnected = false;
-        BleConnectionWatchdog.close();
-        BleConnectionWatchdog = null;
+        closeBleConnectionWatchdog();
         closeCurrentBleConnection();
         Log.i(LOG_TAG, "Done Disconnecting from bluetooth");
         statusChanged(R.string.status_stopped);
+    }
+
+    private void closeBleConnectionWatchdog() {
+        if (bleConnectionWatchdog != null) {
+            bleConnectionWatchdog.close();
+            bleConnectionWatchdog = null;
+        }
     }
 
     /**
