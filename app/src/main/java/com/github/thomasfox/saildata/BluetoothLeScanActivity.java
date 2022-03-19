@@ -56,6 +56,7 @@ public class BluetoothLeScanActivity extends AppCompatActivity
             ((Button) findViewById(R.id.scanStatusToggleButton)).setText(R.string.button_start_scan);
         }
         else {
+            bluetoothDeviceList.clear();
             bleScanner.startScan(this);
             ((Button) findViewById(R.id.scanStatusToggleButton)).setText(R.string.button_stop_scan);
         }
