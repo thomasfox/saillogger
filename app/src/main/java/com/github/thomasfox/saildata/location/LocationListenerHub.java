@@ -37,9 +37,13 @@ public class LocationListenerHub implements LocationListener {
 
     private final TackDirectionChangeAnalyzer tackDirectionChangeAnalyzer;
 
+    private FakeLocationProvider fakeLocationProvider;
+
     private static final int LOCATION_POLLING_INTERVAL_MILLIS = 250;
 
     private static final int LOCATION_MIN_DISTANCE_METERS = 1;
+
+    private static final boolean USE_FAKE_LOCATION = false;
 
     public LocationListenerHub(
             @NonNull AppCompatActivity activity,
@@ -83,6 +87,10 @@ public class LocationListenerHub implements LocationListener {
     public void close()
     {
         stopLocationListener();
+        if (fakeLocationProvider != null) {
+            fakeLocationProvider.close();
+            fakeLocationProvider = null;
+        }
     }
 
     private void registerLocationListener()
@@ -90,11 +98,16 @@ public class LocationListenerHub implements LocationListener {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED)
         {
-            locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    LOCATION_POLLING_INTERVAL_MILLIS,
-                    LOCATION_MIN_DISTANCE_METERS,
-                   this);
+            if (USE_FAKE_LOCATION) {
+                fakeLocationProvider = new FakeLocationProvider(this);
+            }
+            else {
+                locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER,
+                        LOCATION_POLLING_INTERVAL_MILLIS,
+                        LOCATION_MIN_DISTANCE_METERS,
+                        this);
+            }
             screenLocationDisplayer.displayWaitForFix();
         }
         else
