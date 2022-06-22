@@ -80,6 +80,7 @@ public class BluetoothLeScanActivity extends AppCompatActivity
     @Override
     public void scanFailed(String errorMessage) {
         ((Button) findViewById(R.id.scanStatusToggleButton)).setText(R.string.button_start_scan);
+        // TODO display error message somewhere
     }
 
     @Override

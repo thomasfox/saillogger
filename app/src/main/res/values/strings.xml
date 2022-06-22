@@ -53,4 +53,9 @@
     <string name="scan_finished">Scan finished</string>
     <string name="scan_canceled">Scan canceled</string>
     <string name="scan_failed">Scan failed</string>
+
+    <string name="notification_channel_default_importance_name">defaultImportance</string>
+    <string name="notification_channel_default_importance_description">defaultImportanceDescription</string>
+    <string name="notification_background_location_title">Zeiche Track auf</string>
+    <string name="notification_ticker_text">notification_ticker_text</string>
 </resources>

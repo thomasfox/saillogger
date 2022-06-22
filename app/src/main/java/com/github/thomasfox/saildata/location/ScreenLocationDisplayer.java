@@ -73,7 +73,7 @@ public class ScreenLocationDisplayer {
         statusChanged(R.string.status_permission_denied);
     }
 
-    public void close() {
+    public void stopLogging() {
         statusChanged(R.string.status_stopped);
         locationTextView.setText(activity.getResources().getString(R.string.status_standby));
         speedTextView.setText(activity.getResources().getString(R.string.speed_no_value_text));

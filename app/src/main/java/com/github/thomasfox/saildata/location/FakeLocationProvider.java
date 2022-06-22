@@ -19,7 +19,6 @@ public class FakeLocationProvider {
         locationProviderThread = null;
     }
 
-
     private static class LocationProviderThread extends Thread {
 
         private LocationListener locationListener;

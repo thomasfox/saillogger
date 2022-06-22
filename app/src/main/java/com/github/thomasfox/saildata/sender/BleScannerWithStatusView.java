@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresPermission;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -44,7 +46,9 @@ public class BleScannerWithStatusView extends ScanCallback {
 
     private final BleScanCallback bleScanCallback;
 
-    public BleScannerWithStatusView(TextView messageView, BleScanCallback bleScanCallback) {
+    public BleScannerWithStatusView(
+            @NonNull TextView messageView,
+            @NonNull BleScanCallback bleScanCallback) {
         this.messageView = messageView;
         this.bleScanCallback = bleScanCallback;
     }
@@ -68,32 +72,38 @@ public class BleScannerWithStatusView extends ScanCallback {
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
 
         // bluetoothAdapter is null if bluetooth is not supported
-        if (bluetoothAdapter == null) {
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
             scanFailed(activity.getString(R.string.bluetooth_not_supported));
             return;
         }
 
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+        if (bluetoothLeScanner == null) {
+            scanFailed(activity.getString(R.string.bluetooth_not_supported));
+            return;
+        }
 
         handler.postDelayed(() -> {
             stopScanInternal();
             Log.i(LOG_TAG, "Stopped bluetooth LE scan");
-            if (messageView != null) {
-                messageView.setText(R.string.scan_finished);
-            }
+            messageView.setText(R.string.scan_finished);
             bleScanCallback.scanFinished();
         }, BLUETOOTH_DEVICE_SCAN_PERIOD_MILLIS);
 
-        if (messageView != null) {
-            messageView.setText(R.string.scanning_bluetooth_le_devices);
-        }
+        messageView.setText(R.string.scanning_bluetooth_le_devices);
         Log.i(LOG_TAG, "Started bluetooth LE scan");
-        bluetoothLeScanner.startScan(this);
+        try {
+            bluetoothLeScanner.startScan(this);
+        }
+        catch(SecurityException e) {
+            Log.i(LOG_TAG, "SecurityException while calling startScan", e);
+            messageView.setText(R.string.bluetooth_not_supported);
+        }
     }
 
     public void stopScan() {
         Log.i(LOG_TAG, "StopScan called");
-        if (scanning && messageView != null) {
+        if (scanning) {
             messageView.setText(R.string.scan_canceled);
         }
         stopScanInternal();
@@ -104,10 +114,19 @@ public class BleScannerWithStatusView extends ScanCallback {
     }
 
     private void stopScanInternal() {
-        bluetoothLeScanner.stopScan(this);
+        if (bluetoothLeScanner != null) {
+            try {
+                bluetoothLeScanner.stopScan(this);
+            }
+            catch (SecurityException e) {
+                Log.w(LOG_TAG, "SecurityException while calling stopScanInternal", e);
+                messageView.setText(R.string.bluetooth_not_supported);
+            }
+        }
         scanning = false;
     }
 
+    @RequiresPermission(android.Manifest.permission.BLUETOOTH_CONNECT)
     public void onScanResult(int callbackType, ScanResult result) {
         super.onScanResult(callbackType, result);
         Log.i(LOG_TAG, "Found device with name " + result.getDevice().getName()
