@@ -13,6 +13,9 @@ import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import com.github.thomasfox.saildata.camera.CameraManager;
+import com.github.thomasfox.saildata.location.LocationListenerHub;
+import com.github.thomasfox.saildata.location.LocationServiceLifecycle;
+import com.github.thomasfox.saildata.location.ScreenLocationDisplayer;
 import com.github.thomasfox.saildata.logger.Files;
 
 /**
@@ -26,17 +29,29 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
 
     private final TextView bleStatusTextView;
 
+    private final ScreenLocationDisplayer screenLocationDisplayer;
+
     private CameraManager cameraManager;
 
+    private final LocationListenerHub locationListener;
+
     private final MainActivity activity;
+
+    private LocationServiceLifecycle locationServiceLifecycle;
 
     public StartStopLoggingClickListener(
             TextView locationTextView,
             TextView bleStatusTextView,
+            ScreenLocationDisplayer screenLocationDisplayer,
             MainActivity activity) {
         this.locationTextView = locationTextView;
         this.bleStatusTextView = bleStatusTextView;
+        this.screenLocationDisplayer = screenLocationDisplayer;
         this.activity = activity;
+        this.locationListener = new LocationListenerHub(activity, screenLocationDisplayer);
+
+        locationServiceLifecycle = new LocationServiceLifecycle(activity, locationListener);
+
     }
 
     @Override
@@ -52,9 +67,12 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
     }
 
     private void startLogging() {
+        locationServiceLifecycle = new LocationServiceLifecycle(activity, locationListener);
+        locationServiceLifecycle.start();
+
         requestLocationPermissionIfNeeded();
         int trackFileNumber = Files.getTrackFileNumber(activity);
-        activity.getLocationListener().startLogging(
+        locationListener.startLogging(
                 locationTextView,
                 trackFileNumber,
                 bleStatusTextView);
@@ -71,8 +89,13 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
     }
 
     public void stopLogging() {
-        activity.getLocationListener().stopLogging();
-        activity.getScreenLocationDisplayer().stopLogging();
+        if (locationServiceLifecycle != null) {
+            locationServiceLifecycle.stop();
+            locationServiceLifecycle = null;
+        }
+
+        locationListener.stopLogging();
+        screenLocationDisplayer.stopLogging();
         if (cameraManager != null) {
             cameraManager.close();
             cameraManager = null;
