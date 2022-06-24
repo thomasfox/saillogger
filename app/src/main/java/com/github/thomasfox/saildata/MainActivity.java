@@ -30,9 +30,7 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         TextView gpsStatusTextView = findViewById(R.id.statusGpsText);
         TextView bleStatusTextView = findViewById(R.id.statusBleText);
         TextView speedTextView = findViewById(R.id.speedText);
-        speedTextView.setText(getResources().getString(R.string.speed_no_value_text));
         TextView bearingTextView = findViewById(R.id.bearingText);
-        bearingTextView.setText(getResources().getString(R.string.bearing_no_value_text));
 
         ScreenLocationDisplayer screenLocationDisplayer = new ScreenLocationDisplayer(
                 this,

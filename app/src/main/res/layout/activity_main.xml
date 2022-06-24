@@ -43,7 +43,7 @@
             android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="144sp"
-            tools:text="@tools:sample/lorem" />
+            android:text="@string/speed_no_value_text" />
 
         <TextView
             android:id="@+id/bearingText"
@@ -53,7 +53,7 @@
             android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="144sp"
-            tools:text="@tools:sample/lorem" />
+            android:text="@string/bearing_no_value_text" />
         <LinearLayout
             android:id="@+id/statusLayout"
             android:orientation="horizontal"
