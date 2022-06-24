@@ -7,6 +7,12 @@
     <SwitchPreferenceCompat
         app:key="dimScreenWhileLogging"
         app:title="Dim Screen while logging"/>
+    <SwitchPreferenceCompat
+        app:key="logCompass"
+        app:title="Log compass"/>
+    <SwitchPreferenceCompat
+        app:key="logAcceleration"
+        app:title="Log Acceleration"/>
 
     <EditTextPreference
         app:key="bleDeviceAddress"
