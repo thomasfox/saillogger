@@ -17,8 +17,6 @@ import com.github.thomasfox.saildata.screen.ScreenManager;
 
 public class MainActivity extends AppCompatActivity implements BrightnessListener {
 
-    private static final String LOG_TAG ="Saildata:Main";
-
     private ScreenManager screenManager;
 
     private StartStopLoggingClickListener startStopLoggingClickListener;
@@ -71,10 +69,6 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         return screenManager;
     }
 
-    public ScreenLocationDisplayer getScreenLocationDisplayer() {
-        return screenLocationDisplayer;
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -116,6 +110,4 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
     public ToggleButton getEnableLoggingButton() {
         return enableLoggingButton;
     }
-
-
 }
