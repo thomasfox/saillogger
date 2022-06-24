@@ -39,6 +39,10 @@ public class LocationService extends Service implements LocationListener {
 
     private FakeLocationProvider fakeLocationProvider;
 
+    private LocationListener locationListenerToForwardTo;
+
+    private final IBinder serviceBinder = new LocationBinder();
+
     private void createNotificationChannel() {
         if (notificationChannelCreated) {
             return;
@@ -61,10 +65,12 @@ public class LocationService extends Service implements LocationListener {
         super.onStartCommand(intent, flags, startId);
 
         createNotificationChannel();
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE);
 
-        NotificationCompat.Builder notificationBuilder
-                = new NotificationCompat.Builder(this, DEFAULT_IMPORTANCE_CHANNEL_ID);
         Notification notification =
                 new NotificationCompat.Builder(this, DEFAULT_IMPORTANCE_CHANNEL_ID)
                         .setContentTitle(getText(R.string.notification_background_location_title))
@@ -75,7 +81,6 @@ public class LocationService extends Service implements LocationListener {
         startForeground(300, notification);
         return START_STICKY;
     }
-
 
     @Override
     public void onCreate() {
@@ -104,7 +109,9 @@ public class LocationService extends Service implements LocationListener {
             fakeLocationProvider = null;
         }
         stopForeground(true);
-        _locManager.removeUpdates(this);
+        if (_locManager != null) {
+            _locManager.removeUpdates(this);
+        }
     }
 
     @Override
@@ -113,10 +120,6 @@ public class LocationService extends Service implements LocationListener {
             locationListenerToForwardTo.onLocationChanged(location);
         }
     }
-
-    private LocationListener locationListenerToForwardTo;
-
-    private IBinder serviceBinder = new LocationBinder();
 
     public void registerCallback(LocationListener locationListener) {
         this.locationListenerToForwardTo = locationListener;
@@ -134,5 +137,4 @@ public class LocationService extends Service implements LocationListener {
     public IBinder onBind(Intent intent) {
         return serviceBinder;
     }
-
 }
