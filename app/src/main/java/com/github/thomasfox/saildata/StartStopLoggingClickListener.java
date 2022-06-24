@@ -17,6 +17,7 @@ import com.github.thomasfox.saildata.location.LocationListenerHub;
 import com.github.thomasfox.saildata.location.LocationServiceLifecycle;
 import com.github.thomasfox.saildata.location.ScreenLocationDisplayer;
 import com.github.thomasfox.saildata.logger.Files;
+import com.github.thomasfox.saildata.screen.ScreenManager;
 
 /**
  * Handles "Start logging" ond "Stop logging" events from the user.
@@ -39,19 +40,22 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
 
     private LocationServiceLifecycle locationServiceLifecycle;
 
+    private final ScreenManager screenManager;
+
     public StartStopLoggingClickListener(
             TextView locationTextView,
             TextView bleStatusTextView,
             ScreenLocationDisplayer screenLocationDisplayer,
+            ScreenManager screenManager,
             MainActivity activity) {
         this.locationTextView = locationTextView;
         this.bleStatusTextView = bleStatusTextView;
         this.screenLocationDisplayer = screenLocationDisplayer;
+        this.screenManager = screenManager;
         this.activity = activity;
+
         this.locationListener = new LocationListenerHub(activity, screenLocationDisplayer);
-
         locationServiceLifecycle = new LocationServiceLifecycle(activity, locationListener);
-
     }
 
     @Override
@@ -80,11 +84,11 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
         if (defaultSharedPreferences.getBoolean(SettingsActivity.SETTINGS_KEY_RECORD_VIDEO, false)) {
             cameraManager = new CameraManager(activity, trackFileNumber);
         }
-        activity.getScreenManager().disableScreenOff();
+        screenManager.disableScreenOff();
         if (defaultSharedPreferences.getBoolean(
                 SettingsActivity.SETTINGS_KEY_DIM_SCREEN_WHILE_LOGGING,
                 false)) {
-            activity.getScreenManager().minimizeBrightness();
+            screenManager.minimizeBrightness();
          }
     }
 
@@ -100,8 +104,8 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
             cameraManager.close();
             cameraManager = null;
         }
-        activity.getScreenManager().restoreSystemBrightness();
-        activity.getScreenManager().allowScreenOff();
+        screenManager.restoreSystemBrightness();
+        screenManager.allowScreenOff();
     }
 
     private void requestLocationPermissionIfNeeded() {

@@ -17,11 +17,7 @@ import com.github.thomasfox.saildata.screen.ScreenManager;
 
 public class MainActivity extends AppCompatActivity implements BrightnessListener {
 
-    private ScreenManager screenManager;
-
     private StartStopLoggingClickListener startStopLoggingClickListener;
-
-    private ScreenLocationDisplayer screenLocationDisplayer;
 
     private ToggleButton enableLoggingButton;
 
@@ -37,36 +33,35 @@ public class MainActivity extends AppCompatActivity implements BrightnessListene
         speedTextView.setText(getResources().getString(R.string.speed_no_value_text));
         TextView bearingTextView = findViewById(R.id.bearingText);
         bearingTextView.setText(getResources().getString(R.string.bearing_no_value_text));
-        screenManager = new ScreenManager(this);
-        screenManager.registerBrightnessListener(this);
 
-        screenLocationDisplayer = new ScreenLocationDisplayer(
+        ScreenLocationDisplayer screenLocationDisplayer = new ScreenLocationDisplayer(
                 this,
                 gpsStatusTextView,
                 locationTextView,
                 speedTextView,
                 bearingTextView);
 
+        ScreenManager screenManager = new ScreenManager(this);
+        screenManager.registerBrightnessListener(this);
+
         startStopLoggingClickListener = new StartStopLoggingClickListener(
                 locationTextView,
                 bleStatusTextView,
                 screenLocationDisplayer,
+                screenManager,
                 this);
+
         enableLoggingButton = findViewById(R.id.enableLoggingButton);
         enableLoggingButton.setOnClickListener(startStopLoggingClickListener);
 
         ToggleButton dimScreenButton = findViewById(R.id.dimScreenButton);
-        dimScreenButton.setOnClickListener(new DimScreenClickListener(this));
+        dimScreenButton.setOnClickListener(new DimScreenClickListener(screenManager));
 
         Toolbar toolbar = findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(
                 getResources().getString(R.string.app_name) + " "
                         + getResources().getString(R.string.app_version));
-    }
-
-    public ScreenManager getScreenManager() {
-        return screenManager;
     }
 
     @Override

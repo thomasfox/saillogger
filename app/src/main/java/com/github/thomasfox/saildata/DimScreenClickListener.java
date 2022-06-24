@@ -9,8 +9,8 @@ class DimScreenClickListener implements View.OnClickListener {
 
     private final ScreenManager screenManager;
 
-    DimScreenClickListener(MainActivity activity) {
-        this.screenManager = activity.getScreenManager();
+    DimScreenClickListener(ScreenManager screenManager) {
+        this.screenManager = screenManager;
     }
 
     @Override
