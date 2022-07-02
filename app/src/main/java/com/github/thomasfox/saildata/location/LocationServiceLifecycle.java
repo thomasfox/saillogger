@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import androidx.annotation.NonNull;
+
 /**
  * Manages the lifecycle of the Location service.
  *
@@ -38,7 +40,9 @@ public class LocationServiceLifecycle {
         }
     };
 
-    public LocationServiceLifecycle(Context context, LocationListenerHub locationListener) {
+    public LocationServiceLifecycle(
+            @NonNull Context context,
+            @NonNull LocationListenerHub locationListener) {
         this.context = context;
         this.locationListener = locationListener;
     }
@@ -58,7 +62,7 @@ public class LocationServiceLifecycle {
      */
     public void stop() {
         if (locationServiceBound) {
-            locationService.registerCallback(null);
+            locationService.clearCallback();
             context.unbindService(serviceConnection);
             locationServiceBound = false;
         }

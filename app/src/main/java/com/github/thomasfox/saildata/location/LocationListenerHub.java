@@ -17,7 +17,7 @@ import com.github.thomasfox.saildata.sender.BleSender;
  * Receives location information from the location service and passes the information
  * to the places where location information is needed in the application.
  */
-public class LocationListenerHub implements LocationListener {
+public class LocationListenerHub implements SaildataLocationListener {
 
     private final AppCompatActivity activity;
 
@@ -57,18 +57,20 @@ public class LocationListenerHub implements LocationListener {
                 tackDirectionChangeAnalyzer);
     }
 
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(@NonNull Location location) {
         tackDirectionChangeAnalyzer.onLocationChanged(location);
         dataLogger.setLocation(location);
         screenLocationDisplayer.onLocationChanged(location);
         bluetoothLocationDisplayer.onLocationChanged(location);
     }
 
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
+    public void onPermissionDenied() {
+        screenLocationDisplayer.displayPermissionDenied();
+    }
 
-    public void onProviderEnabled(String provider) {}
-
-    public void onProviderDisabled(String provider) {}
+    public void onLocationPollStarted() {
+        screenLocationDisplayer.displayWaitForFix();
+    }
 
     public void stopLogging()
     {

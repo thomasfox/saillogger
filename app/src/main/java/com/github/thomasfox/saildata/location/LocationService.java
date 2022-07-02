@@ -39,7 +39,7 @@ public class LocationService extends Service implements LocationListener {
 
     private FakeLocationProvider fakeLocationProvider;
 
-    private LocationListener locationListenerToForwardTo;
+    private SaildataLocationListener locationListenerToForwardTo;
 
     private final IBinder serviceBinder = new LocationBinder();
 
@@ -97,6 +97,9 @@ public class LocationService extends Service implements LocationListener {
                         this);
             } catch (SecurityException e) {
                 Log.i(LOG_TAG, "No permission to receive location updates");
+                if (locationListenerToForwardTo != null) {
+                    locationListenerToForwardTo.onPermissionDenied();
+                }
             }
         }
     }
@@ -121,9 +124,15 @@ public class LocationService extends Service implements LocationListener {
         }
     }
 
-    public void registerCallback(LocationListener locationListener) {
+    public void registerCallback(@NonNull SaildataLocationListener locationListener) {
         this.locationListenerToForwardTo = locationListener;
+        locationListenerToForwardTo.onLocationPollStarted();
     }
+
+    public void clearCallback() {
+        this.locationListenerToForwardTo = null;
+    }
+
 
     public class LocationBinder extends Binder {
 

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
@@ -43,11 +44,11 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
     private final ScreenManager screenManager;
 
     public StartStopLoggingClickListener(
-            TextView locationTextView,
-            TextView bleStatusTextView,
-            ScreenLocationDisplayer screenLocationDisplayer,
-            ScreenManager screenManager,
-            MainActivity activity) {
+            @NonNull TextView locationTextView,
+            @NonNull TextView bleStatusTextView,
+            @NonNull ScreenLocationDisplayer screenLocationDisplayer,
+            @NonNull ScreenManager screenManager,
+            @NonNull MainActivity activity) {
         this.locationTextView = locationTextView;
         this.bleStatusTextView = bleStatusTextView;
         this.screenLocationDisplayer = screenLocationDisplayer;
@@ -110,6 +111,8 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
 
     private void requestLocationPermissionIfNeeded() {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+            || ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(activity,
