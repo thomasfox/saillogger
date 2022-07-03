@@ -1,7 +1,8 @@
 package com.github.thomasfox.saildata.ui.main;
 
 import android.Manifest;
-import android.app.DialogFragment;
+
+import androidx.fragment.app.DialogFragment;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.view.View;
@@ -72,7 +73,9 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
         }
         else {
             DialogFragment stopLoggingDialogFragment = new StopLoggingDialogFragment();
-            stopLoggingDialogFragment.show(activity.getFragmentManager(), "stopLoggingDialog");
+            stopLoggingDialogFragment.show(
+                    activity.getSupportFragmentManager(),
+                    "stopLoggingDialog");
         }
     }
 
