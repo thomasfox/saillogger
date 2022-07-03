@@ -7,6 +7,12 @@ import android.os.Bundle;
 
 import com.github.thomasfox.saildata.R;
 
+/**
+ * Asks the user whether he really wants to stop logging.
+ * If yes, logging is stopped.
+ * If no, logging is continued and the state of the "start/stop logging" button is changed
+ * to reflect that logging is continued.
+ */
 public class StopLoggingDialogFragment extends DialogFragment {
 
     @Override

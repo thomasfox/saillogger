@@ -22,7 +22,11 @@ import com.github.thomasfox.saildata.screen.ScreenManager;
 import com.github.thomasfox.saildata.ui.settings.SettingsKey;
 
 /**
- * Handles "Start logging" ond "Stop logging" events from the user.
+ * Handles clicks on the "start/stop logging" button.
+ * Depending on the state of the button:
+ * If it has just changed its state to checked, logging is started.
+ * If it has just changed its state to unchecked, confirmation is asked and if confirmed,
+ * logging is stopped.
  */
 public class StartStopLoggingClickListener implements View.OnClickListener {
 

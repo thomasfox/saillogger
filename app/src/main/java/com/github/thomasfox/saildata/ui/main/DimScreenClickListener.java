@@ -5,6 +5,11 @@ import android.widget.ToggleButton;
 
 import com.github.thomasfox.saildata.screen.ScreenManager;
 
+/**
+ * A click listener which handles clicks on the "dim screen" button.
+ * If the button is clicked, it toggles the brightness from normal brightness to dimmed,
+ * and vive versa.
+ */
 public class DimScreenClickListener implements View.OnClickListener {
 
     private final ScreenManager screenManager;
