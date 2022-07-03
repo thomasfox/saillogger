@@ -1,10 +1,12 @@
-package com.github.thomasfox.saildata;
+package com.github.thomasfox.saildata.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
+import com.github.thomasfox.saildata.R;
 
 public class WroteFileDialogFragment extends DialogFragment {
 

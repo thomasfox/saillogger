@@ -7,7 +7,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 
-import com.github.thomasfox.saildata.MainActivity;
+import com.github.thomasfox.saildata.ui.main.MainActivity;
 import com.github.thomasfox.saildata.R;
 
 import org.junit.Test;

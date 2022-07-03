@@ -1,4 +1,4 @@
-package com.github.thomasfox.saildata;
+package com.github.thomasfox.saildata.ui.main;
 
 import android.Manifest;
 import android.app.DialogFragment;
@@ -19,6 +19,7 @@ import com.github.thomasfox.saildata.location.LocationServiceLifecycle;
 import com.github.thomasfox.saildata.location.ScreenLocationDisplayer;
 import com.github.thomasfox.saildata.logger.Files;
 import com.github.thomasfox.saildata.screen.ScreenManager;
+import com.github.thomasfox.saildata.ui.settings.SettingsKey;
 
 /**
  * Handles "Start logging" ond "Stop logging" events from the user.
@@ -82,12 +83,12 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
                 trackFileNumber,
                 bleStatusTextView);
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        if (defaultSharedPreferences.getBoolean(SettingsActivity.SETTINGS_KEY_RECORD_VIDEO, false)) {
+        if (defaultSharedPreferences.getBoolean(SettingsKey.SETTINGS_KEY_RECORD_VIDEO, false)) {
             cameraManager = new CameraManager(activity, trackFileNumber);
         }
         screenManager.disableScreenOff();
         if (defaultSharedPreferences.getBoolean(
-                SettingsActivity.SETTINGS_KEY_DIM_SCREEN_WHILE_LOGGING,
+                SettingsKey.SETTINGS_KEY_DIM_SCREEN_WHILE_LOGGING,
                 false)) {
             screenManager.minimizeBrightness();
          }

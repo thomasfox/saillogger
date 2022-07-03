@@ -1,8 +1,10 @@
-package com.github.thomasfox.saildata;
+package com.github.thomasfox.saildata.ui.settings;
 
 import android.os.Bundle;
 
 import androidx.preference.PreferenceFragmentCompat;
+
+import com.github.thomasfox.saildata.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     @Override

@@ -1,4 +1,4 @@
-package com.github.thomasfox.saildata;
+package com.github.thomasfox.saildata.ui.settings;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.pm.PackageManager;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import com.github.thomasfox.saildata.R;
 import com.github.thomasfox.saildata.sender.BleScanCallback;
 import com.github.thomasfox.saildata.sender.BleScannerWithStatusView;
 import com.github.thomasfox.saildata.sender.BluetoothDeviceList;

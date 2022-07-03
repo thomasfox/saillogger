@@ -1,11 +1,11 @@
-package com.github.thomasfox.saildata;
+package com.github.thomasfox.saildata.ui.main;
 
 import android.view.View;
 import android.widget.ToggleButton;
 
 import com.github.thomasfox.saildata.screen.ScreenManager;
 
-class DimScreenClickListener implements View.OnClickListener {
+public class DimScreenClickListener implements View.OnClickListener {
 
     private final ScreenManager screenManager;
 

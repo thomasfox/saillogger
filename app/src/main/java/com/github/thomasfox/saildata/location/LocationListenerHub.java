@@ -1,14 +1,11 @@
 package com.github.thomasfox.saildata.location;
 
 import android.location.Location;
-import android.location.LocationListener;
-import android.os.Bundle;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.thomasfox.saildata.LoggingSensorListener;
 import com.github.thomasfox.saildata.analyzer.TackDirectionChangeAnalyzer;
 import com.github.thomasfox.saildata.logger.DataLogger;
 import com.github.thomasfox.saildata.sender.BleSender;

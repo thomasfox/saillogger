@@ -1,4 +1,4 @@
-package com.github.thomasfox.saildata;
+package com.github.thomasfox.saildata.location;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,7 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import com.github.thomasfox.saildata.logger.DataLogger;
+import com.github.thomasfox.saildata.ui.settings.SettingsKey;
 
+/**
+ * Registers for updates of the magnetic field and forwards the compass readings
+ * to the data logger.
+ */
 public class LoggingSensorListener implements SensorEventListener {
 
     private static final String TAG = "saildatalogger";
@@ -55,17 +60,17 @@ public class LoggingSensorListener implements SensorEventListener {
     private void registerSensorListener()
     {
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        if (defaultSharedPreferences.getBoolean(SettingsActivity.SETTINGS_KEY_LOG_COMPASS, false)) {
-            Sensor compass = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED);
-            if (compass == null) {
+        if (defaultSharedPreferences.getBoolean(SettingsKey.SETTINGS_KEY_LOG_COMPASS, false)) {
+            Sensor compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED);
+            if (compassSensor == null) {
                 Log.i(TAG, "Using calibrated magnetic field sensor.");
-                compass = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+                compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
             } else {
                 Log.i(TAG, "Using uncalibrated magnetic field sensor.");
             }
-            sensorManager.registerListener(this, compass, POLLING_INTERVAL_MICROS);
+            sensorManager.registerListener(this, compassSensor, POLLING_INTERVAL_MICROS);
         }
-        if (defaultSharedPreferences.getBoolean(SettingsActivity.SETTINGS_KEY_LOG_ACCELERATION, false)) {
+        if (defaultSharedPreferences.getBoolean(SettingsKey.SETTINGS_KEY_LOG_ACCELERATION, false)) {
             Sensor acceleration = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, acceleration, POLLING_INTERVAL_MICROS);
         }

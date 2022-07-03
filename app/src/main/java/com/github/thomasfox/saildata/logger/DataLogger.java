@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.thomasfox.saildata.R;
-import com.github.thomasfox.saildata.WroteFileDialogFragment;
+import com.github.thomasfox.saildata.ui.WroteFileDialogFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -1,4 +1,4 @@
-package com.github.thomasfox.saildata;
+package com.github.thomasfox.saildata.ui.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,15 +6,9 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.thomasfox.saildata.R;
+
 public class SettingsActivity extends AppCompatActivity {
-
-    public static final String SETTINGS_KEY_RECORD_VIDEO = "recordVideo";
-
-    public static final String SETTINGS_KEY_DIM_SCREEN_WHILE_LOGGING = "dimScreenWhileLogging";
-
-    public static final String SETTINGS_KEY_LOG_COMPASS = "logCompass";
-
-    public static final String SETTINGS_KEY_LOG_ACCELERATION = "logAcceleration";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

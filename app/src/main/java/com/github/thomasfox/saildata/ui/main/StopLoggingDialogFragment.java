@@ -1,9 +1,11 @@
-package com.github.thomasfox.saildata;
+package com.github.thomasfox.saildata.ui.main;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+
+import com.github.thomasfox.saildata.R;
 
 public class StopLoggingDialogFragment extends DialogFragment {
 
