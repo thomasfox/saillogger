@@ -3,6 +3,8 @@ package com.github.thomasfox.saildata.sender;
 import android.app.Activity;
 import android.util.Log;
 
+import com.github.thomasfox.saildata.R;
+
 class BleConnectionWatchdog extends Thread {
 
     private static final String LOG_TAG ="saildata:BLEConnThread";
@@ -41,7 +43,8 @@ class BleConnectionWatchdog extends Thread {
                 }
                 bleSender.connectInternal(activity, address);
             } catch (RuntimeException connectException) {
-                Log.w(LOG_TAG, "Error while connecting, disconnecting");
+                Log.w(LOG_TAG, "Error while connecting, disconnecting", connectException);
+                bleSender.statusChanged(R.string.status_permission_denied);
             }
             if (bleSender.isConnectionAttemptedToIncompatibleDevice()) {
                 sleepInternal(RECONNECT_INCOMPATIBLE_DEVICE_SLEEP_TIME_MILLIS);

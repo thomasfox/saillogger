@@ -29,6 +29,7 @@
     <string name="status_find_services">finding services</string>
     <string name="status_connected">connected</string>
     <string name="status_permission_denied">permission denied</string>
+    <string name="status_device_not_found">device not found</string>
     <string name="status_wait_for_fix">wait for fix</string>
     <string name="status_fix">fix</string>
 

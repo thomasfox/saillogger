@@ -34,6 +34,8 @@ public class BleSender {
 
     private static final int MY_PERMISSIONS_REQUEST_BLUETOOTH_ADMIN = 377;
 
+    private static final int MY_PERMISSIONS_REQUEST_BLUETOOTH_CONNECT = 3987;
+
     private static final String SPEED_FIELD_PREFIX = "f1:";
 
     private static final String BEARING_STRING_FIELD_PREFIX = "f2:";
@@ -87,6 +89,12 @@ public class BleSender {
                     new String[]{Manifest.permission.BLUETOOTH_ADMIN},
                     MY_PERMISSIONS_REQUEST_BLUETOOTH_ADMIN);
         }
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH_CONNECT)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{Manifest.permission.BLUETOOTH_CONNECT},
+                    MY_PERMISSIONS_REQUEST_BLUETOOTH_CONNECT);
+        }
 
         connect(activity);
     }
@@ -127,12 +135,19 @@ public class BleSender {
             "Got Bluetooth adapter, looking for remote device with address " + address);
         BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
-            Log.w(LOG_TAG, "Device not found.  Unable to connect.");
+            Log.w(LOG_TAG, "Device " + address + " not found.  Unable to connect.");
+            statusChanged(R.string.status_device_not_found);
             return;
         }
         Log.d(LOG_TAG, "Found device with address " + address);
         closeCurrentBleConnection();
-        bluetoothGatt = device.connectGatt(activity, false, new SaildataBluetoothGattCallback());
+        try {
+            bluetoothGatt = device.connectGatt(activity, false, new SaildataBluetoothGattCallback());
+        }
+        catch (SecurityException e) {
+            statusChanged(R.string.status_permission_denied);
+            Log.w(LOG_TAG, "error while connectGatt: " + e);
+        }
 
         Log.d(LOG_TAG, "Started to create a new GATT connection.");
     }
@@ -161,7 +176,13 @@ public class BleSender {
                             CHARACTERISTIC_UUID.toString()))
                     {
                         Log.i(LOG_TAG, "Found matching BLE characteristic");
-                        bluetoothGatt.setCharacteristicNotification(characteristic, true);
+                        try {
+                            bluetoothGatt.setCharacteristicNotification(characteristic, true);
+                        }
+                        catch (SecurityException e) {
+                            statusChanged(R.string.status_permission_denied);
+                            Log.w(LOG_TAG, "error while setting CharacteristicNotification: " + e);
+                        }
                         bluetoothGattCharacteristic = characteristic;
                         incompatibleDevice = false;
                         statusChanged(R.string.status_connected);
@@ -215,7 +236,14 @@ public class BleSender {
             return;
         }
         bluetoothGattCharacteristic = null;
-        bluetoothGatt.close();
+        try {
+            bluetoothGatt.close();
+        }
+        catch (SecurityException e) {
+            statusChanged(R.string.status_permission_denied);
+            Log.w(LOG_TAG, "error while closing connection: " + e);
+        }
+
         bluetoothGatt = null;
         statusChanged(R.string.status_disconnected);
     }
@@ -248,7 +276,15 @@ public class BleSender {
     public void sendRawIfConnected(String strValue) {
         if (bluetoothGatt != null && bluetoothGattCharacteristic != null) {
             bluetoothGattCharacteristic.setValue(strValue.getBytes());
-            bluetoothGatt.writeCharacteristic(bluetoothGattCharacteristic);
+            try
+            {
+                bluetoothGatt.writeCharacteristic(bluetoothGattCharacteristic);
+            }
+            catch (SecurityException e) {
+                statusChanged(R.string.status_permission_denied);
+                Log.w(LOG_TAG, "error while writing Data: " + e);
+            }
+
             // it seems that the display needs a little time after sending
             // before it can receive the next data packet
             try {
@@ -262,7 +298,7 @@ public class BleSender {
         }
     }
 
-    private void statusChanged(int statusTextResourceId) {
+    void statusChanged(int statusTextResourceId) {
         statusTextView.setText(
             activity.getResources().getString(
                 R.string.status_ble_tag,
@@ -281,21 +317,25 @@ public class BleSender {
                 statusChanged(R.string.status_find_services);
                 Log.i(LOG_TAG, "Connected to GATT server.");
                 // Attempts to discover services after successful connection.
-                if (bluetoothGatt.discoverServices()) {
-                    Log.i(LOG_TAG, "Service discovery started");
+                try {
+                    if (bluetoothGatt.discoverServices()) {
+                        Log.i(LOG_TAG, "Service discovery started");
+                    }
+                    else {
+                        Log.i(LOG_TAG, "Failed to start service discovery, disconnecting");
+                        closeCurrentBleConnection();
+                        incompatibleDevice = true;
+                    }
                 }
-                else
-                {
-                    Log.i(LOG_TAG, "Failed to start service discovery, disconnecting");
-                    closeCurrentBleConnection();
-                    incompatibleDevice = true;
+                catch (SecurityException e) {
+                    statusChanged(R.string.status_permission_denied);
+                    Log.w(LOG_TAG, "error while setting closing connection: " + e);
                 }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.i(LOG_TAG, "Disconnected from GATT Server");
                 closeCurrentBleConnection();
             }
-            else
-            {
+            else {
                 Log.i(LOG_TAG, "BLE status changed. ConnectionStatus=" + connectionStatus
                         + " NewStatus=" + newState);
                 closeCurrentBleConnection();
