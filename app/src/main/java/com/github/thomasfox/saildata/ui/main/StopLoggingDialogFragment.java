@@ -2,6 +2,9 @@ package com.github.thomasfox.saildata.ui.main;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import android.os.Bundle;
 
@@ -15,8 +18,9 @@ import com.github.thomasfox.saildata.R;
  */
 public class StopLoggingDialogFragment extends DialogFragment {
 
+    @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.message_stop_logging)
                 .setPositiveButton(
