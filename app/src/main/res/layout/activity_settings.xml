@@ -11,6 +11,9 @@
         android:id="@+id/mainToolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat" />
 
     <androidx.fragment.app.FragmentContainerView

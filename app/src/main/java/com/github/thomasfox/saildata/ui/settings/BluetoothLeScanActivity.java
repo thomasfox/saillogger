@@ -23,7 +23,7 @@ import com.github.thomasfox.saildata.sender.BluetoothDeviceData;
 public class BluetoothLeScanActivity extends AppCompatActivity
         implements BleScanCallback, AdapterView.OnItemClickListener {
 
-    private static final String LOG_TAG ="Saildata:BLEScanAct";
+    private static final String LOG_TAG ="saildata:BLEScanAct";
 
     private BluetoothDeviceList bluetoothDeviceList;
 

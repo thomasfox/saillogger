@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class CameraManager {
 
-    private static final String TAG = "saildatalogger";
+    private static final String TAG = "saildata:CamManager";
 
     private final AppCompatActivity activity;
 

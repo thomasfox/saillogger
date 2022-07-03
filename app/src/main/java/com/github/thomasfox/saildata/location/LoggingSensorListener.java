@@ -21,7 +21,7 @@ import com.github.thomasfox.saildata.ui.settings.SettingsKey;
  */
 public class LoggingSensorListener implements SensorEventListener {
 
-    private static final String TAG = "saildatalogger";
+    private static final String TAG = "saildata:SensorListener";
 
     private final SensorManager sensorManager;
 

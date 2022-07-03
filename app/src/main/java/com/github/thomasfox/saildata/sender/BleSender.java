@@ -26,7 +26,7 @@ import java.util.UUID;
 
 public class BleSender {
 
-    private static final String LOG_TAG ="Saildata:BLE";
+    private static final String LOG_TAG ="saildata:BLESender";
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 9561;
 

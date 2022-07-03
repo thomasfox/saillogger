@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class BluetoothAndroidUnitTest {
 
-    private static final String LOG_TAG ="Saildata:BLEUnitTest";
+    private static final String LOG_TAG ="saildata:BLEUnitTest";
 
     /**
      * Tests sending data to the selected BLE device.

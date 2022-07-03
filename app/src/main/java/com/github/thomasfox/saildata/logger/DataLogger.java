@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -52,7 +53,9 @@ public class DataLogger {
                     throw new RuntimeException("File creation failed");
                 }
             }
-            jsonWriter = new JsonWriter(new OutputStreamWriter(new FileOutputStream(storageFile), "UTF-8"));
+            jsonWriter = new JsonWriter(new OutputStreamWriter(
+                    new FileOutputStream(storageFile),
+                    StandardCharsets.UTF_8));
             jsonWriter.setIndent("");
             Date startDate = new Date();
             jsonWriter.beginObject()
@@ -61,14 +64,14 @@ public class DataLogger {
                     .name("format")
                     .value("v1.5")
                     .name("loggedBy")
-                    .value("saildatalogger")
+                    .value("saildata")
                     .name("loggedByVersion")
                     .value(activity.getResources().getString(R.string.app_version))
                     .name("startT")
                     .value(startDate.getTime())
                     .name("startTFormatted")
                     .value(dateFormat.format(startDate))
-                    .name("recordedByManufactorer")
+                    .name("recordedByManufacturer")
                     .value(Build.MANUFACTURER)
                     .name("recordedByModel")
                     .value(Build.MODEL)

@@ -9,8 +9,8 @@ import java.util.Objects;
  */
 public class BluetoothDeviceData {
 
-    private String name;
-    private String macAddress;
+    private final String name;
+    private final String macAddress;
 
     public BluetoothDeviceData(BluetoothDevice bluetoothDevice) {
         this.name = bluetoothDevice.getName();

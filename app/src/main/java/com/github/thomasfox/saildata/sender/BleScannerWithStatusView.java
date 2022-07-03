@@ -26,7 +26,7 @@ import com.github.thomasfox.saildata.R;
  */
 public class BleScannerWithStatusView extends ScanCallback {
 
-    private static final String LOG_TAG ="Saildata:BLEScanner";
+    private static final String LOG_TAG ="saildata:BLEScanner";
 
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 9561;
 

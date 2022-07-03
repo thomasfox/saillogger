@@ -5,7 +5,7 @@ import android.util.Log;
 
 class BleConnectionWatchdog extends Thread {
 
-    private static final String LOG_TAG ="Saildata:BLEConnThread";
+    private static final String LOG_TAG ="saildata:BLEConnThread";
 
     private static final long CONNECTION_CHECK_SLEEP_TIME_MILLIS = 1000L;
 

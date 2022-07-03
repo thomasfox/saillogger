@@ -20,7 +20,7 @@ import com.github.thomasfox.saildata.screen.ScreenManager;
 /**
  * The main activity of the app.
  * Presents a view where speed and direction are displayed,
- * logging can be satarted and stopped,
+ * logging can be started and stopped,
  * and settings can be accessed.
  */
 public class MainActivity extends AppCompatActivity implements BrightnessListener {

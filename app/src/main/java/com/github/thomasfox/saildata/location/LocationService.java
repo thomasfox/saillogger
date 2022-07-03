@@ -23,7 +23,7 @@ import com.github.thomasfox.saildata.R;
 
 public class LocationService extends Service implements LocationListener {
 
-    private static final String LOG_TAG ="Saildata:LocService";
+    private static final String LOG_TAG ="saildata:LocService";
 
     private static final String DEFAULT_IMPORTANCE_CHANNEL_ID = "DefaultImportanceChannel";
 
@@ -74,7 +74,7 @@ public class LocationService extends Service implements LocationListener {
         Notification notification =
                 new NotificationCompat.Builder(this, DEFAULT_IMPORTANCE_CHANNEL_ID)
                         .setContentTitle(getText(R.string.notification_background_location_title))
-                        .setSmallIcon(R.drawable.ic_saillogger_foreground)
+                        .setSmallIcon(R.drawable.ic_saildata_foreground)
                         .setContentIntent(pendingIntent)
                         .setTicker(getText(R.string.notification_ticker_text))
                         .build();

@@ -21,7 +21,7 @@ public class FakeLocationProvider {
 
     private static class LocationProviderThread extends Thread {
 
-        private LocationListener locationListener;
+        private final LocationListener locationListener;
 
         private float currentBearing = 50f;
 

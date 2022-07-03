@@ -13,7 +13,7 @@ public class ScreenManager {
 
     private final AppCompatActivity activity;
 
-    private List<BrightnessListener> brightnessListenerList = new ArrayList<>();
+    private final List<BrightnessListener> brightnessListenerList = new ArrayList<>();
 
     public ScreenManager(AppCompatActivity activity) {
         this.activity = activity;

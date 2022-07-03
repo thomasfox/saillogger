@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="saildatalogger.thomasfox.github.com.saildatalogger.com.github.thomasfox.saildatalogger.MainActivity">
+    tools:context="com.github.thomasfox.saildata.MainActivity">
     <item
         android:id="@+id/close"
         android:title="@string/menu_close"/>

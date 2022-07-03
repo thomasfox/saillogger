@@ -15,11 +15,9 @@ import java.util.ArrayList;
 
 public class BluetoothDeviceList extends BaseAdapter {
 
-    private static final String LOG_TAG ="Saildata:BLDeviceList";
+    private final ArrayList<BluetoothDeviceData> devices = new ArrayList<>();
 
-    private ArrayList<BluetoothDeviceData> devices = new ArrayList<>();
-
-    private LayoutInflater layoutInflater;
+    private final LayoutInflater layoutInflater;
 
     private boolean scanFailed = false;
 

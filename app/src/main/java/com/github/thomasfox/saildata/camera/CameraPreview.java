@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
-    private static final String TAG = "saildatalogger";
+    private static final String TAG = "saildata:CamPreview";
 
     private final Camera camera;
 
@@ -30,7 +30,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         try {
             camera.setPreviewDisplay(holder);
             camera.startPreview();
-            post(new Runnable() { public void run() { cameraManager.startVideo(); } });
+            post(cameraManager::startVideo);
         } catch (IOException | RuntimeException e) {
             Log.w(TAG, "Error setting camera preview: " + e.getMessage());
         }

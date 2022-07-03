@@ -7,29 +7,29 @@ import java.io.File;
 
 public class Files {
 
-    private static final String TAG = "saildatalogger";
+    private static final String LOG_TAG = "saildata:Files";
 
     private static final String TRACK_FILE_NAME_PREFIX = "track";
-    private static final String TRACK_FILE_NAME_SUFFIX = ".saillog";
+    private static final String TRACK_FILE_NAME_SUFFIX = ".saildata";
     private static final String VIDEO_FILE_NAME_SUFFIX = ".mp4";
 
-    private static File getStorageDir(Activity activitiy) {
-        File file = activitiy.getExternalFilesDir(null);
+    private static File getStorageDir(Activity activity) {
+        File file = activity.getExternalFilesDir(null);
         if  (file == null)
         {
             throw new RuntimeException("Cannot access externalFilesDir");
         }
         if (!file.exists()) {
             if (!file.mkdirs()) {
-                Log.w(TAG, "Error creating directory " + file.getAbsolutePath());
+                Log.w(LOG_TAG, "Error creating directory " + file.getAbsolutePath());
             }
         }
         return file;
     }
 
-    public static File getTrackFile(int trackFileNumber, Activity activitiy) {
+    public static File getTrackFile(int trackFileNumber, Activity activity) {
         return new File(
-                getStorageDir(activitiy),
+                getStorageDir(activity),
                 TRACK_FILE_NAME_PREFIX + trackFileNumber + TRACK_FILE_NAME_SUFFIX);
     }
 
