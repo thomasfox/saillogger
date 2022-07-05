@@ -36,6 +36,8 @@ public class BleSender {
 
     private static final int MY_PERMISSIONS_REQUEST_BLUETOOTH_CONNECT = 3987;
 
+    private static final int MY_PERMISSIONS_REQUEST_BLUETOOTH_SCAN = 3987;
+
     private static final String SPEED_FIELD_PREFIX = "f1:";
 
     private static final String BEARING_STRING_FIELD_PREFIX = "f2:";
@@ -71,6 +73,12 @@ public class BleSender {
         this.activity = activity;
         this.statusTextView = statusTextView;
 
+        askForBluetoothPermissions(activity);
+
+        connect(activity);
+    }
+
+    static void askForBluetoothPermissions(@NonNull Activity activity) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity,
@@ -95,8 +103,12 @@ public class BleSender {
                     new String[]{Manifest.permission.BLUETOOTH_CONNECT},
                     MY_PERMISSIONS_REQUEST_BLUETOOTH_CONNECT);
         }
-
-        connect(activity);
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH_SCAN)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{Manifest.permission.BLUETOOTH_SCAN},
+                    MY_PERMISSIONS_REQUEST_BLUETOOTH_SCAN);
+        }
     }
 
     public void connect(@NonNull Activity activity) {

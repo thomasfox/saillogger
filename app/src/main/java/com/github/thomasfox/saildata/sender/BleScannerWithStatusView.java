@@ -60,7 +60,7 @@ public class BleScannerWithStatusView extends ScanCallback {
     }
 
     public void startScan(Activity activity) {
-        askForPermissions(activity);
+        BleSender.askForBluetoothPermissions(activity);
         if (scanning) {
             Log.i(LOG_TAG, "Scan already running, not starting a new one");
             return;
@@ -140,26 +140,5 @@ public class BleScannerWithStatusView extends ScanCallback {
         Log.i(LOG_TAG, message);
         stopScanInternal();
         bleScanCallback.scanFailed(message);
-    }
-
-    private void askForPermissions(Activity activity) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.BLUETOOTH},
-                    MY_PERMISSIONS_REQUEST_BLUETOOTH);
-        }
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH_ADMIN)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.BLUETOOTH_ADMIN},
-                    MY_PERMISSIONS_REQUEST_BLUETOOTH_ADMIN);
-        }
     }
 }
