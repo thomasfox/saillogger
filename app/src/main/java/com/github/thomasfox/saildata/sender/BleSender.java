@@ -311,10 +311,11 @@ public class BleSender {
     }
 
     void statusChanged(int statusTextResourceId) {
-        statusTextView.setText(
-            activity.getResources().getString(
-                R.string.status_ble_tag,
-                activity.getResources().getString(statusTextResourceId)));
+        activity.runOnUiThread(() ->
+            statusTextView.setText(
+                activity.getResources().getString(
+                    R.string.status_ble_tag,
+                    activity.getResources().getString(statusTextResourceId))));
     }
 
     private final class SaildataBluetoothGattCallback extends BluetoothGattCallback {
