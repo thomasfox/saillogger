@@ -198,7 +198,8 @@ public class BleSender {
                         bluetoothGattCharacteristic = characteristic;
                         incompatibleDevice = false;
                         statusChanged(R.string.status_connected);
-                        sendLineIfConnected("123");
+                        sendLineIfConnected("f1:--");
+                        sendLineIfConnected("f2:--");
                         return;
                     }
                     else
