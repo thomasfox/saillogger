@@ -30,15 +30,20 @@ public class BluetoothAndroidUnitTest {
         ActivityScenario.launch(MainActivity.class).onActivity(activity -> {
             TextView statusTextView = activity.findViewById(R.id.statusBleText);
             BleSender bluetoothSender = new BleSender(activity, statusTextView);
-            for (int i=0; i < 99; i++) {
-                Log.d(LOG_TAG, "sending " + i);
-                bluetoothSender.sendLineIfConnected("f2:" + i + ".0");
-                bluetoothSender.sendLineIfConnected("f1:" + i + "0");
-                 try {
-                    Thread.sleep(1000L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            for (int j = 0; j < 10; j++) {
+                for (int i = 0; i < 10; i++) {
+                    Log.d(LOG_TAG, "sending " + i);
+                    bluetoothSender.sendFieldsIfConnected(
+                            "f1:" + i + ".0",
+                            "f2:" + j + "00",
+                            "f3:" + (i - 5) * 10);
+                    try {
+                        Thread.sleep(1000L);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }});
+            }
+        });
     }
 }

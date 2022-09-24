@@ -35,15 +35,17 @@ public class BluetoothLocationDisplayer {
     }
 
     public void onLocationChanged(Location location) {
-        bluetoothSender.sendSpeedIfConnected(getSpeedText(location));
-        bluetoothSender.sendBearingStringIfConnected(getBearingText(location));
-        bluetoothSender.sendBearingBarIfConnected(getBearingBarText());
+        bluetoothSender.sendSpeadBearingAndBarIfConnected(
+                getSpeedText(location),
+                getBearingText(location),
+                getBearingBarInteger());
     }
 
     public void close() {
-        bluetoothSender.sendSpeedIfConnected(activity.getResources().getString(R.string.speed_no_value_text));
-        bluetoothSender.sendBearingStringIfConnected(activity.getResources().getString(R.string.bearing_no_value_text));
-        bluetoothSender.sendBearingBarIfConnected("0");
+        bluetoothSender.sendSpeadBearingAndBarIfConnected(
+                activity.getResources().getString(R.string.speed_no_value_text),
+                activity.getResources().getString(R.string.speed_no_value_text),
+                0);
     }
 
     private String getSpeedText(Location location) {
@@ -56,7 +58,7 @@ public class BluetoothLocationDisplayer {
                 location.getBearing());
     }
 
-    private String getBearingBarText() {
+    private Integer getBearingBarInteger() {
         // Bearing bar values are from -100 to 100.
         // We map that to -25 degrees to +25 degrees off the current tack.
         Float directionRelativeToTackDirection
@@ -64,7 +66,6 @@ public class BluetoothLocationDisplayer {
         if (directionRelativeToTackDirection == null) {
             return null;
         }
-        return String.format(Locale.GERMAN, "%.0f°",
-                directionRelativeToTackDirection * 4);
+        return (int) (directionRelativeToTackDirection * 4);
     }
 }

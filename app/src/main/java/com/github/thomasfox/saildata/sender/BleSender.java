@@ -198,8 +198,7 @@ public class BleSender {
                         bluetoothGattCharacteristic = characteristic;
                         incompatibleDevice = false;
                         statusChanged(R.string.status_connected);
-                        sendLineIfConnected("f1:--");
-                        sendLineIfConnected("f2:--");
+                        sendSpeadBearingAndBarIfConnected("--", "--", 0);
                         return;
                     }
                     else
@@ -261,32 +260,38 @@ public class BleSender {
         statusChanged(R.string.status_disconnected);
     }
 
-    public void sendSpeedIfConnected(String toSend) {
-        if (toSend == null) {
-            return;
+    public void sendSpeadBearingAndBarIfConnected(
+            String speed,
+            String bearing,
+            Integer bearingBar)
+    {
+        sendFieldsIfConnected(
+                prefixOrNull(SPEED_FIELD_PREFIX , speed),
+                prefixOrNull(BEARING_STRING_FIELD_PREFIX, bearing),
+                prefixOrNull(BEARING_BAR_FIELD_PREFIX, bearingBar));
+    }
+
+    private String prefixOrNull(String prefix, Object value) {
+        if (value == null) {
+            return null;
         }
-        sendRawIfConnected(SPEED_FIELD_PREFIX + toSend + ";");
+        return prefix + value;
     }
 
-    public void sendBearingStringIfConnected(String toSend) {
-        if (toSend == null) {
-            return;
+    public void sendFieldsIfConnected(String... fieldStrings) {
+        StringBuilder valueBuilder = new StringBuilder();
+        for (String fieldString : fieldStrings) {
+            if (fieldString != null) {
+                valueBuilder.append(fieldString);
+                valueBuilder.append(';');
+            }
         }
-        sendRawIfConnected(BEARING_STRING_FIELD_PREFIX + toSend + ";");
-    }
-
-    public void sendBearingBarIfConnected(String toSend) {
-        if (toSend == null) {
-            return;
+        if (valueBuilder.length() > 0) {
+            sendRawStringIfConnected(valueBuilder.toString());
         }
-        sendRawIfConnected(BEARING_BAR_FIELD_PREFIX + toSend + ";");
     }
 
-    public void sendLineIfConnected(String toSend) {
-        sendRawIfConnected(toSend + ";");
-    }
-
-    public void sendRawIfConnected(String strValue) {
+    public void sendRawStringIfConnected(String strValue) {
         if (bluetoothGatt != null && bluetoothGattCharacteristic != null) {
             bluetoothGattCharacteristic.setValue(strValue.getBytes());
             try
