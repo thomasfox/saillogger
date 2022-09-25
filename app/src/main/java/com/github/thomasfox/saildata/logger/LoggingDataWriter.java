@@ -15,6 +15,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Writes a stream of LoggingData objects into a file using the saildata JSON format.
+ * Additional info is written at the start and the end of the stream when the
+ * <code>startForAppVersion</code> and <code>close</code> methods are called.
+ */
 public class LoggingDataWriter {
 
     private JsonWriter jsonWriter;
