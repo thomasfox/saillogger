@@ -59,4 +59,38 @@
     <string name="notification_channel_default_importance_description">defaultImportanceDescription</string>
     <string name="notification_background_location_title">Recording Track...</string>
     <string name="notification_ticker_text">notification_ticker_text</string>
+
+    <string-array name="gpsPollingIntervals">
+        <item>0.25 s</item>
+        <item>0.5 s</item>
+        <item>1 s</item>
+        <item>2 s</item>
+        <item>5 s</item>
+        <item>10 s</item>
+    </string-array>
+    <string-array name="gpsPollingIntervalValues">
+        <item>250</item>
+        <item>500</item>
+        <item>1000</item>
+        <item>2000</item>
+        <item>5000</item>
+        <item>10000</item>
+    </string-array>
+
+    <string-array name="gpsUpdateDistances">
+        <item>1 m</item>
+        <item>2 m</item>
+        <item>5 m</item>
+        <item>10 m</item>
+        <item>25 m</item>
+        <item>50 m</item>
+    </string-array>
+    <string-array name="gpsUpdateDistanceValues">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>25</item>
+        <item>50</item>
+    </string-array>
 </resources>

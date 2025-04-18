@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
         xmlns:app="http://schemas.android.com/apk/res-auto">
-    <SwitchPreferenceCompat
+    <SwitchPreference
         app:key="recordVideo"
         app:title="Record Video"/>
-    <SwitchPreferenceCompat
+    <SwitchPreference
         app:key="dimScreenWhileLogging"
         app:title="Dim Screen while logging"/>
-    <SwitchPreferenceCompat
+    <SwitchPreference
         app:key="logCompass"
         app:title="Log compass"/>
-    <SwitchPreferenceCompat
+    <SwitchPreference
         app:key="logAcceleration"
         app:title="Log Acceleration"/>
-
+    <ListPreference
+        app:key="gpsPollingIntervalMillis"
+        app:title="GPS Polling Interval"
+        app:entries="@array/gpsPollingIntervals"
+        app:entryValues="@array/gpsPollingIntervalValues"
+        app:defaultValue="1000"/>
+    <ListPreference
+        app:key="gpsMinUpdateDistanceMeters"
+        app:title="GPS min Update Distance"
+        app:entries="@array/gpsUpdateDistances"
+        app:entryValues="@array/gpsUpdateDistanceValues"
+        app:defaultValue="2"/>
     <EditTextPreference
         app:key="bleDeviceAddress"
         app:title="BLE Device Address"/>
-
     <Preference
         app:key="scanBleButton"
         app:layout="@layout/scan_ble_button"/>
-
 </PreferenceScreen>

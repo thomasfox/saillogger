@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,6 +19,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.preference.PreferenceManager;
 
 import com.github.thomasfox.saildata.R;
 
@@ -26,10 +28,6 @@ public class LocationService extends Service implements LocationListener {
     private static final String LOG_TAG ="saildata:LocService";
 
     private static final String DEFAULT_IMPORTANCE_CHANNEL_ID = "DefaultImportanceChannel";
-
-    private static final int LOCATION_POLLING_INTERVAL_MILLIS = 250;
-
-    private static final int LOCATION_MIN_DISTANCE_METERS = 1;
 
     private static final boolean USE_FAKE_LOCATION = false;
 
@@ -88,12 +86,18 @@ public class LocationService extends Service implements LocationListener {
             fakeLocationProvider = new FakeLocationProvider(this);
         }
         else {
+            SharedPreferences sharedPreferences
+                    = PreferenceManager.getDefaultSharedPreferences(this);
+            int pollingIntervalMillis = Integer.parseInt(
+                    sharedPreferences.getString("gpsMinUpdateTimeSeconds", "1000"));
+            int minUpdateDistanceMeters = Integer.parseInt(
+                    sharedPreferences.getString("gpsMinUpdateDistanceMeters", "2"));
             try {
                 _locManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
                 _locManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER,
-                        LOCATION_POLLING_INTERVAL_MILLIS,
-                        LOCATION_MIN_DISTANCE_METERS,
+                        pollingIntervalMillis,
+                        minUpdateDistanceMeters,
                         this);
             } catch (SecurityException e) {
                 Log.i(LOG_TAG, "No permission to receive location updates");
