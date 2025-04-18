@@ -1,4 +1,4 @@
-package com.github.thomasfox.saildata;
+package com.github.thomasfox.saildata.analyzer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -6,11 +6,20 @@ import static org.mockito.Mockito.when;
 
 import android.location.Location;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.github.thomasfox.saildata.analyzer.TackDirectionChangeAnalyzer;
+import com.github.thomasfox.saildata.analyzer.gpx.Gpx;
+import com.github.thomasfox.saildata.analyzer.gpx.GpxPoint;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,6 +149,35 @@ public class TackDirectionChangeAnalyzerTest {
         Location result = mock(Location.class);
         when(result.getLatitude()).thenReturn(latitude);
         when(result.getLongitude()).thenReturn(longitude);
+        return result;
+    }
+
+    private List<Location> loadGpxFile(File gpxFile)
+    {
+        List<Location> result = new ArrayList<>();
+        List<GpxPoint> rawData = loadGpxFileInternal(gpxFile);
+        for (GpxPoint rawPoint : rawData)
+        {
+            Location location = createLatLongLocation(rawPoint.lat, rawPoint.lon);
+            result.add(location);
+        }
+        return result;
+    }
+
+    private List<GpxPoint> loadGpxFileInternal(File gpxFile)
+    {
+        List<GpxPoint> result;
+        try (InputStream is = new FileInputStream(gpxFile))
+        {
+            ObjectMapper xmlMapper = new XmlMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            Gpx value = xmlMapper.readValue(is, Gpx.class);
+            result = value.trk.trkseg.trkpt;
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
         return result;
     }
 }
