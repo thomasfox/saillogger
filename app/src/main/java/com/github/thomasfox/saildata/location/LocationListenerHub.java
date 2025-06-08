@@ -6,7 +6,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.thomasfox.saildata.analyzer.TackDirectionChangeAnalyzer;
+import com.github.thomasfox.saildata.analyzer.AnalyzerHub;
 import com.github.thomasfox.saildata.logger.DataLogger;
 import com.github.thomasfox.saildata.sender.BleSender;
 
@@ -26,7 +26,7 @@ public class LocationListenerHub implements SaildataLocationListener {
 
     private final ScreenLocationDisplayer screenLocationDisplayer;
 
-    private TackDirectionChangeAnalyzer tackDirectionChangeAnalyzer;
+    private AnalyzerHub analyzerHub;
 
     private LoggingSensorListener compassListener;
 
@@ -45,18 +45,18 @@ public class LocationListenerHub implements SaildataLocationListener {
             @NonNull TextView bleStatusTextView) {
         dataLogger = new DataLogger(activity, locationTextView, trackFileNumber);
 
-        tackDirectionChangeAnalyzer = new TackDirectionChangeAnalyzer();
+        analyzerHub = new AnalyzerHub(activity);
         compassListener = new LoggingSensorListener(activity, dataLogger);
         bleSender = new BleSender(activity, bleStatusTextView);
         bluetoothLocationDisplayer = new BluetoothLocationDisplayer(
                 activity,
                 bleSender,
-                tackDirectionChangeAnalyzer);
+                analyzerHub.getTackDirectionChangeAnalyzer());
     }
 
     public void onLocationChanged(@NonNull Location location) {
-        tackDirectionChangeAnalyzer.onLocationChanged(location);
-        dataLogger.setLocation(location);
+        analyzerHub.onLocationChanged(location);
+        dataLogger.onLocationChanged(location);
         screenLocationDisplayer.onLocationChanged(location);
         bluetoothLocationDisplayer.onLocationChanged(location);
     }
@@ -83,6 +83,7 @@ public class LocationListenerHub implements SaildataLocationListener {
         bluetoothLocationDisplayer = null;
         bleSender.close();
         bleSender = null;
-        tackDirectionChangeAnalyzer = null;
+        analyzerHub.close();
+        analyzerHub = null;
     }
 }

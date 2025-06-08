@@ -39,4 +39,5 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.22.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:4.2.0'
+    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.4'
 }

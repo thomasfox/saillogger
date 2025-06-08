@@ -9,7 +9,6 @@ import android.location.Location;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.github.thomasfox.saildata.analyzer.TackDirectionChangeAnalyzer;
 import com.github.thomasfox.saildata.analyzer.gpx.Gpx;
 import com.github.thomasfox.saildata.analyzer.gpx.GpxPoint;
 

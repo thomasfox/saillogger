@@ -1,8 +1,6 @@
 package com.github.thomasfox.saildata.logger;
 
-import android.app.DialogFragment;
 import android.location.Location;
-import android.os.Bundle;
 import android.os.Environment;
 import android.widget.TextView;
 
@@ -73,16 +71,11 @@ public class DataLogger {
                         e.getMessage()));
             }
         }
-        DialogFragment dialogFragment = new WroteFileDialogFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(
-                WroteFileDialogFragment.FILE_LOCATION_BUNDLE_KEY,
-                storageFile.getAbsolutePath());
-        dialogFragment.setArguments(bundle);
-        dialogFragment.show(activity.getFragmentManager(), "wroteFileDialog");
+        WroteFileDialogFragment dialogFragment = new WroteFileDialogFragment();
+        dialogFragment.showFragment(storageFile.getAbsolutePath(), activity.getFragmentManager());
     }
 
-    public synchronized void setLocation(Location location) {
+    public synchronized void onLocationChanged(Location location) {
         LoggingData locationData = new LoggingData();
         locationData.setLocation(location);
         write(locationData);
