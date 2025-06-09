@@ -12,4 +12,9 @@ public class Constants {
 
     /** Number of milliseconds in one second. */
     public static final int MILLISECONDS_IN_SECONDS = 1000;
+
+    public static final double RADIANS_PER_DEGREE = Math.PI/360d;
+
+    public static final float RADIANS_PER_DEGREE_AS_FLOAT
+            = Double.valueOf(Math.PI/360).floatValue();
 }

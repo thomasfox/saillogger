@@ -8,34 +8,40 @@ import java.util.Date;
 
 public class MemoryLocation {
 
-    // time from GPS signal
+    // time from GPS signal, in milliseconds since 1970
     public long locationTimeMillis;
 
+    // latitude in radians
     public double latitude;
 
+    // longitude in radians
     public double longitude;
 
+    // accuracy in meters
     public Float locationAccuracy;
 
+    // bearing in radians
     public Float locationBearing;
 
+    // speed from GPS signal, in meters per second
     public Float locationVelocity;
 
+    // altitude from GPS signal, in meters
     public Double locationAltitude;
 
-    // device time when GPS data was recorded
-    public Long locationDeviceTimeMillis;
+    // device time when GPS data was recorded, in milliseconds since 1970
+    public Long deviceTimeMillis;
 
     public MemoryLocation(Location location)
     {
         locationTimeMillis = location.getTime();
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
+        latitude = location.getLatitude() * Constants.RADIANS_PER_DEGREE;
+        longitude = location.getLongitude() * Constants.RADIANS_PER_DEGREE;
         locationAccuracy = location.getAccuracy();
-        locationBearing = location.getBearing();
+        locationBearing = location.getBearing() * Constants.RADIANS_PER_DEGREE_AS_FLOAT;
         locationVelocity = location.getSpeed();
         locationAltitude = location.getAltitude();
-        locationDeviceTimeMillis = new Date().getTime();
+        deviceTimeMillis = new Date().getTime();
     }
 
     public long getLocationTimeMillis() {
@@ -66,8 +72,8 @@ public class MemoryLocation {
         return locationAltitude;
     }
 
-    public Long getLocationDeviceTimeMillis() {
-        return locationDeviceTimeMillis;
+    public Long getDeviceTimeMillis() {
+        return deviceTimeMillis;
     }
 
     /**
@@ -104,10 +110,5 @@ public class MemoryLocation {
         double xDist = getX() - other.getX();
         double yDist = getY() - other.getY();
         return Math.sqrt(xDist * xDist + yDist * yDist);
-    }
-
-    public double approximateVelocity(@NonNull MemoryLocation other)
-    {
-        return (approximateDistance(other) / (locationTimeMillis - other.locationTimeMillis));
     }
 }
