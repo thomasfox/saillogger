@@ -1,5 +1,7 @@
 package com.github.thomasfox.saildata.location;
 
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -76,7 +78,11 @@ public class LocationService extends Service implements LocationListener {
                         .setContentIntent(pendingIntent)
                         .setTicker(getText(R.string.notification_ticker_text))
                         .build();
-        startForeground(300, notification);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(300, notification, FOREGROUND_SERVICE_TYPE_LOCATION);
+        } else {
+            startForeground(300, notification);
+        }
         return START_STICKY;
     }
 

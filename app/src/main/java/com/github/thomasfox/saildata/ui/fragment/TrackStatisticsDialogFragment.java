@@ -1,4 +1,4 @@
-package com.github.thomasfox.saildata.ui;
+package com.github.thomasfox.saildata.ui.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

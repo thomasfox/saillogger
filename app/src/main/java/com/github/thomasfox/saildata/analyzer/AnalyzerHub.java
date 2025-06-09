@@ -5,7 +5,7 @@ import android.location.Location;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.thomasfox.saildata.ui.TrackStatisticsDialogFragment;
+import com.github.thomasfox.saildata.ui.fragment.TrackStatisticsDialogFragment;
 
 public class AnalyzerHub {
 

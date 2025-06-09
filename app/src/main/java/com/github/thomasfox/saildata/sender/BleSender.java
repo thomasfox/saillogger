@@ -28,12 +28,6 @@ public class BleSender {
 
     private static final String LOG_TAG ="saildata:BLESender";
 
-    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 9561;
-
-    private static final int MY_PERMISSIONS_REQUEST_BLUETOOTH = 1078;
-
-    private static final int MY_PERMISSIONS_REQUEST_BLUETOOTH_ADMIN = 377;
-
     private static final int MY_PERMISSIONS_REQUEST_BLUETOOTH_CONNECT = 3987;
 
     private static final int MY_PERMISSIONS_REQUEST_BLUETOOTH_SCAN = 3987;
@@ -79,24 +73,6 @@ public class BleSender {
     }
 
     static void askForBluetoothPermissions(@NonNull Activity activity) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.BLUETOOTH},
-                    MY_PERMISSIONS_REQUEST_BLUETOOTH);
-        }
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH_ADMIN)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.BLUETOOTH_ADMIN},
-                    MY_PERMISSIONS_REQUEST_BLUETOOTH_ADMIN);
-        }
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH_CONNECT)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity,

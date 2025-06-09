@@ -45,6 +45,7 @@
     <string name="err_close_track_data_file">Could not close track data file: %1$s</string>
     <string name="info_gps_accuracy">accuracy %1$s</string>
     <string name="info_file_written">Wrote track data to file: %1$s</string>
+    <string name="info_permission_needed">Permission required: %1$s</string>
     <string name="info_track_statistics">2 seconds average speed: %1$s, \n5 seconds average speed: %2$s, \n10 seconds average speed: %3$s</string>
 
     <string name="scan_bluetooth_le_devices">Scan Bluetooth LE Devices</string>

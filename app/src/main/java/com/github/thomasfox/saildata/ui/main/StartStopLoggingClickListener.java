@@ -20,6 +20,7 @@ import com.github.thomasfox.saildata.location.LocationServiceLifecycle;
 import com.github.thomasfox.saildata.location.ScreenLocationDisplayer;
 import com.github.thomasfox.saildata.logger.Files;
 import com.github.thomasfox.saildata.screen.ScreenManager;
+import com.github.thomasfox.saildata.ui.fragment.PermissionNeededDialogFragment;
 import com.github.thomasfox.saildata.ui.settings.SettingsKey;
 
 /**
@@ -69,7 +70,7 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
     public void onClick(View view) {
         boolean startLogging = ((ToggleButton) view).isChecked();
         if (startLogging) {
-            startLogging();
+            startLogging(view);
         }
         else {
             DialogFragment stopLoggingDialogFragment = new StopLoggingDialogFragment();
@@ -79,11 +80,16 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
         }
     }
 
-    private void startLogging() {
+    private void startLogging(View view) {
+        if (!requestLocationPermissionIfNeeded())
+        {
+            ((ToggleButton) view).setChecked(false);
+            return;
+        }
+
         locationServiceLifecycle = new LocationServiceLifecycle(activity, locationListener);
         locationServiceLifecycle.start();
 
-        requestLocationPermissionIfNeeded();
         int trackFileNumber = Files.getTrackFileNumber(activity);
         locationListener.startLogging(
                 locationTextView,
@@ -117,8 +123,10 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
         screenManager.allowScreenOff();
     }
 
-    private void requestLocationPermissionIfNeeded() {
+    public boolean requestLocationPermissionIfNeeded() {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+            || ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
             || ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
@@ -130,5 +138,33 @@ public class StartStopLoggingClickListener implements View.OnClickListener {
                             Manifest.permission.ACCESS_BACKGROUND_LOCATION},
                     MY_PERMISSIONS_REQUEST_LOCATION);
         }
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            DialogFragment permissionNeededDialogFragment = new PermissionNeededDialogFragment("ACCESS_FINE_LOCATION");
+            permissionNeededDialogFragment.show(
+                    activity.getSupportFragmentManager(),
+                    "permissionNeededDialog");
+            return false;
+        }
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            DialogFragment permissionNeededDialogFragment = new PermissionNeededDialogFragment("ACCESS_COARSE_LOCATION");
+            permissionNeededDialogFragment.show(
+                    activity.getSupportFragmentManager(),
+                    "permissionNeededDialog");
+            return false;
+        }
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            DialogFragment permissionNeededDialogFragment = new PermissionNeededDialogFragment("ACCESS_BACKGROUND_LOCATION");
+            permissionNeededDialogFragment.show(
+                    activity.getSupportFragmentManager(),
+                    "permissionNeededDialog");
+            return false;
+        }
+        return true;
     }
 }
