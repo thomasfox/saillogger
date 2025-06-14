@@ -1,0 +1,26 @@
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/drawable/ic_saillogger_background.xml" value="0.14270833333333333" />
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/drawable/ic_saillogger_foreground.xml" value="0.14270833333333333" />
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/layout-land/activity_main.xml" value="0.19739583333333333" />
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/layout/activity_bluetoothlescan.xml" value="0.1" />
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/layout/activity_settings.xml" value="0.2671875" />
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/layout/listitem_bluetoothdevice.xml" value="0.2857789855072464" />
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/layout/scan_ble_button.xml" value="0.1716485507246377" />
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/menu/menu_main.xml" value="0.1" />
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/mipmap-anydpi-v26/ic_saildata.xml" value="0.23" />
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/mipmap-anydpi-v26/ic_saildata_round.xml" value="0.23" />
+        <entry key="..\:/Users/fischer/StudioProjects/saildata/app/src/main/res/xml/settings.xml" value="0.19907407407407407" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
