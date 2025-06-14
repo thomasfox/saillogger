@@ -91,13 +91,13 @@ public class SpeedAnalyzerTest {
     @Test
     public void maxSpeedAveragedInKnots_severalLocationsLargerThanAverageTime() {
         addLocation(0, 0, 0);
-        addLocation(500, 1, 0);
-        addLocation(1000, 1, 0);
-        addLocation(1500, 2, 0); // first point for largest velocity
-        addLocation(2000, 6, 0); // second point for largest velocity
-        addLocation(2500, 7, 0);
-        addLocation(2750, 7, 0);
-        addLocation(4000, 8, 0);
+        addLocation(500, 0, 1);
+        addLocation(1000, 0, 1);
+        addLocation(1500, 0, 2); // first point for largest velocity
+        addLocation(2000, 0, 6); // second point for largest velocity
+        addLocation(2500, 0, 7);
+        addLocation(2750, 0, 7);
+        addLocation(4000, 0, 8);
         assertThat(speedAnalyzer.getMaxSpeedAveragedInKnots(400))
                 .isCloseTo(8d*3600/1852, Offset.offset(0.0001));
     }
@@ -106,9 +106,10 @@ public class SpeedAnalyzerTest {
     {
         Location location = Mockito.mock(Location.class);
         when(location.getTime()).thenReturn(time);
-        double latitude = y / Constants.EARTH_RADIUS;
+        double latitude = y / Constants.EARTH_RADIUS * 180 / Math.PI;
         when(location.getLatitude()).thenReturn(latitude);
-        when(location.getLongitude()).thenReturn(x / Constants.EARTH_RADIUS / Math.cos(latitude));
+        when(location.getLongitude()).thenReturn(
+                x * 180 / Math.PI / Constants.EARTH_RADIUS / Math.cos(latitude));
         memoryLocationStore.onLocationChanged(location);
     }
 }
